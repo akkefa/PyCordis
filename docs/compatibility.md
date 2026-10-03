@@ -1,7 +1,7 @@
 # Compatibility status
 
-Phase 2 implements Context views, low-level Fiber lifecycle and minimal owned
-cleanup. Services, full effects, events and registry remain unimplemented.
+Phase 3 implements Context views, low-level Fiber lifecycle and reversible
+effects. Services, events and registry remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -10,7 +10,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Importable typed src package | Scaffold | Python packaging adaptation |
 | Context hierarchy | Partial: implemented | Root/parent/owner and extend metadata; Python adaptation; no Fiber or proxy services |
 | Fiber lifecycle | Partial: implemented | State/epoch transitions, setup/cleanup, ownership, restart/disposal; no services/publication events |
-| Effects | Future | dispose.spec.ts manual/double disposal, generators, async/aborted setup; Harness regressions |
+| Effects | Implemented with explicit deviations | Manual/automatic, generators, rollback and in-flight joins; drain-all and Python finalization differ |
 | Registry/plugin forms | Future | plugin.spec.ts functions, object apply, invalid/nested plugins, shared runtimes |
 | Services and injection | Future | service.spec.ts, reflect.spec.ts; required-service snapshot and inactive access |
 | Reactive reload | Future | fiber.spec.ts provider disposal/loading races; isolate.spec.ts service restoration |
@@ -26,7 +26,8 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
 Each future ported test must record source commit, file and test title and one
 classification: identical semantic behavior, Python-specific adaptation,
-not applicable, or future work. Context and low-level Fiber are partially implemented; other runtime rows remain future work.
+not applicable, or future work. Context and low-level Fiber are partially implemented; effects are implemented
+with documented deviations. Other runtime rows remain future work.
 Do not label tests implemented merely because their source was read.
 
 Start with pinned upstream test bodies, then add Harness-specific regressions:
@@ -79,12 +80,31 @@ mounts use direct Fiber and private epochs, not the original registry/services.
 | upstream fiber.spec.ts plugin error / dispose error | setup rollback/retained error and contained cleanup failures adapted |
 | upstream plugin.spec.ts nested plugins / root dispose | direct child draining and root restart adapted; listener/registry portions future |
 | Harness cordis-lifecycle.spec.ts pending work and child ownership | pending callback drain, checkpoint invalidation, parent joining child adapted |
-| Harness full effect barriers, publication observers | Future: full effects and event publication not yet implemented |
+| Harness full effect barriers, publication observers | Effect barriers added in Phase 3; event publication remains future |
 | newer upstream failed-fiber latch | Intentionally not adopted; Harness epoch refresh can retry |
 | Python cancellation/loop/reentrant semantics | additional tests for shielded waiters, setup cancellation, cross-loop rejection and explicit cycle errors |
 
-30 new Fiber cases plus 25 existing cases pass on Python 3.11.15. Full generator
-effect composition, service snapshots, config hooks, internal status/plugin
+Phase 2 added 30 Fiber cases to 25 existing cases. Phase 3 adds effect composition.
+Service snapshots, config hooks, internal status/plugin
 notifications and registry identity remain future work. Tests inspect absence of
 leftover transition Tasks only after the tested complete shutdown scenario;
 there is no general background-task ownership API yet.
+
+## Phase 3 evidence
+
+29 effect cases in test_effects.py adapt pinned upstream dispose.spec.ts (manual,
+plugin-owned, yielded, async return/yield, aborted setup and setup errors) and
+Harness cordis-lifecycle.spec.ts (reentrant owner restart, async rollback,
+in-flight visibility, single-shot public cleanup and registration guards).
+No TypeScript tests were executed. Total Python suite: 84 passing cases.
+
+Identical intended behavior: immediate sync setup/cleanup, single-shot public
+handle, registration before setup, joined structural cleanup, rollback, reverse
+collected cleanup, PENDING/LOADING legality and UNLOADING rejection.
+Python-specific adaptation: scheduled async startup, callable-awaitable handles,
+immutable metadata snapshots, explicit loop/cycle errors, same-owner transfers,
+Python generator finalization and shielded waiters.
+Intentional semantic deviation: nested callback failures do not stop cleanup;
+remaining callbacks drain, then one original or a grouped error is raised.
+Future work: registry-based mounting, public service injection, internal events,
+service visibility, user background-task ownership helpers and advanced tracing.

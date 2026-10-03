@@ -42,7 +42,8 @@ Fiber creates a context which owns itself and binds that Fiber. Parentage
 alone does not mean lifecycle ownership: extending a view never creates a new
 plugin instance, allocates a task or registers cleanup.
 
-No Context `get`, `provide`, `plugin`, `effect`, `dispose`, isolation or interception API
+Context.effect now registers reversible setup with ctx.fiber. See effects.md.
+No Context `get`, `provide`, `plugin`, `dispose`, isolation or interception API
 exists yet. Metadata is not a service registry. Those contracts require their
 own phases and tests.
 

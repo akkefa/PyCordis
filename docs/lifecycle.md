@@ -1,7 +1,7 @@
-# Fiber lifecycle — Phase 2
+# Fiber lifecycle — Phases 2–3
 
-This phase provides a low-level mounted Fiber, without Registry, services or
-full Cordis effects. The behavioral reference remains Harness
+These phases provide low-level mounted Fibers and reversible effects, without
+Registry or services. See the [effect engine](effects.md). The reference remains Harness
 639ed015397290b3745d163aafe02ffee4aa3f84, fiber.ts and its local lifecycle patches.
 
 ```python
@@ -45,7 +45,8 @@ asyncio.run(main())
 | fiber.add_cleanup(callback) | Minimal owned callback registration; no manual disposer returned |
 
 Setup may be sync/async and return None or one sync/async cleanup callable.
-Generators and composed effects are deliberately deferred to Phase 3.
+Phase 3 also accepts generator and composed effect results. Setup is now
+registered as a labeled effect and uses the shared effect runner.
 Child Fiber construction is a lower-level Phase 2 entrypoint; the registry will
 later provide plugin normalization and ctx.plugin. No builtin services/events or
 internal/plugin/status notifications exist yet.
@@ -141,7 +142,6 @@ cancellation, registration rejection, root restart, loop binding, and no
 remaining lifecycle Tasks after a complete drain. Together with previous tests,
 55 cases pass on Python 3.11.15. TypeScript suites were inspected, not executed.
 
-Reactive service visibility, isolation, config validation, full effect setup/
-composition, background task ownership, publication observers and registry
-identity are not implemented or claimed. The next phase is Effects, including
-setup barriers, nested generators and async cleanup joining under reentrancy.
+Reactive service visibility, isolation, config validation, background task ownership, publication observers and registry
+identity are not implemented or claimed. Effect setup barriers, nested generators and async cleanup joining now have
+Phase 3 tests; see effects.md for their contracts and deviations.

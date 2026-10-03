@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Self
 
 if TYPE_CHECKING:
+    from .effects import Effect
     from .fiber import Fiber
 
 
@@ -84,6 +85,10 @@ class Context:
         Entry values are shared by identity, not deep-copied or frozen.
         """
         return self._metadata
+
+    def effect(self, setup: Callable[[], object], label: str = "anonymous") -> Effect:
+        """Create a reversible effect owned by this context's Fiber."""
+        return self.fiber.effect(setup, label)
 
     def extend(self, meta: Mapping[str, object] | None = None) -> Self:
         """Create a child view without changing this context or its ownership.

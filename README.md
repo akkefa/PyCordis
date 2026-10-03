@@ -4,8 +4,8 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 2 Context and low-level Fiber lifecycle. Services, full effects,
-events and plugin registry are not implemented.**
+**Status: Phase 3 Context, low-level Fiber lifecycle and reversible effects.
+Services, events and plugin registry are not implemented.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -25,7 +25,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Effects. Read the
+The next reviewed increment is Registry and plugin mounting. Read the
+[Effects guide](docs/effects.md) and [Effects ADR](docs/adr/0004-reversible-effects.md). Read the
 [Fiber lifecycle guide](docs/lifecycle.md) and
 [Fiber ADR](docs/adr/0003-fiber-lifecycle.md). Read the
 [Context guide](docs/context.md) and [Context ADR](docs/adr/0002-context-foundation.md)
@@ -62,3 +63,12 @@ The primary target is the vendored runtime at DeepSeek Harness commit
 This is an independent Python implementation in preparation; no affiliation
 or compatibility guarantee is claimed. The project is MIT licensed.
 See [third-party notices](THIRD_PARTY_NOTICES.md) for source licenses.
+
+
+## Effects
+
+Register reversible setup with `ctx.effect(setup, "label")`. Await the handle
+to settle async setup, or call it to request manual cleanup. Owner unload
+automatically joins setup and all owned cleanup. Run
+`uv run python examples/effects.py`. Nested cleanup deliberately drains all
+callbacks before reporting errors; see the compatibility notes.

@@ -1,7 +1,8 @@
 # Architecture and phase status
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
-Registry, full effects, services and events below remain proposed. The TypeScript source separates
+Phase 3 adds full reversible effect collection. Registry, services and events
+below remain proposed. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
 LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
 
@@ -143,3 +144,11 @@ Context now creates a root Fiber synchronously; extensions share it. Direct
 Fiber mounts bind their own contexts and register parent-owned cleanup before
 scheduling setup. See lifecycle.md and ADR 0003 for epoch/cancellation semantics.
 No service/registry/event claims follow from private epoch lifecycle tests.
+
+
+## Phase 3 implementation
+
+See effects.md and ADR 0004. Effect collection and Fiber setup share one engine.
+Unlike the source fail-fast nested chain, cleanup drains all collected callbacks
+before reporting errors. Diagnostics expose immutable effect trees. No registry,
+service or event APIs are introduced.

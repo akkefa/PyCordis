@@ -1,4 +1,4 @@
-"""Serialized Fiber lifecycle, prior to registry, effects and service wiring."""
+"""Serialized Fiber lifecycle with owned effects, prior to registry and services."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from contextvars import ContextVar
 from enum import IntEnum
 from typing import TYPE_CHECKING, TypeAlias
 
+from .effects import Effect, EffectMeta, _active_effects
 from .errors import CordisError
 
 if TYPE_CHECKING:
@@ -48,8 +49,8 @@ class Fiber:
 
     Direct construction is the low-level Phase 2 API. It starts setup on the
     running loop after a checkpoint. Setup may be synchronous or asynchronous
-    and return None or one cleanup callable. Registry normalization and full
-    effect result forms are deferred.
+    and produce cleanup callables or sync/async iterables through the effect
+    engine. Registry normalization and services remain deferred.
     """
 
     _uid: int | None
@@ -152,6 +153,14 @@ class Fiber:
             raise TypeError("cleanup must be callable")
         self._cleanups.append(cleanup)
 
+    def effect(self, setup: Callable[[], object], label: str = "anonymous") -> Effect:
+        """Register reversible setup before invoking its synchronous body."""
+        return Effect(self, setup, label)
+
+    def get_effects(self) -> tuple[EffectMeta, ...]:
+        """Diagnostic snapshots of currently owner-visible effect trees."""
+        return tuple(cleanup.metadata for cleanup in self._cleanups if isinstance(cleanup, Effect))
+
     def _bind_loop(
         self, loop: asyncio.AbstractEventLoop | None = None
     ) -> asyncio.AbstractEventLoop:
@@ -183,6 +192,16 @@ class Fiber:
         )
         self._task = current.create_task(self._drive())
 
+    def _setup_effect(self, epoch: Epoch) -> Effect:
+        setup = self._setup
+        assert setup is not None
+        return Effect(
+            self,
+            lambda: setup(self.ctx, self.config),
+            "plugin setup",
+            _valid=lambda: self.uid is not None and self._epoch == epoch,
+        )
+
     async def _drive(self) -> None:
         token = _executing.set((*_executing.get(), self))
         try:
@@ -193,15 +212,8 @@ class Fiber:
                     if epoch is not None and self.uid is not None and self._epoch == epoch:
                         try:
                             if self._setup is not None:
-                                result = self._setup(self.ctx, self.config)
-                                if inspect.isawaitable(result):
-                                    result = await result
-                                if result is not None:
-                                    if not callable(result):
-                                        raise TypeError(
-                                            "setup must return None or a cleanup callable"
-                                        )
-                                    self._cleanups.append(result)
+                                effect = self._setup_effect(epoch)
+                                await effect
                             self._error = None
                         except (Exception, asyncio.CancelledError) as error:
                             self._error = error
@@ -248,7 +260,7 @@ class Fiber:
                 )
 
     async def _run_cleanup(self, cleanup: Cleanup) -> None:
-        result = cleanup()
+        result = cleanup._dispose_owned() if isinstance(cleanup, Effect) else cleanup()
         if inspect.isawaitable(result):
             await result
 
@@ -264,7 +276,9 @@ class Fiber:
     async def _settle(self) -> None:
         if self._task is not None:
             self._bind_loop()
-            if self in _executing.get():
+            if self in _executing.get() or any(
+                effect.owner is self for effect in _active_effects.get()
+            ):
                 raise CordisError("REENTRANT_AWAIT", "cannot await own or ancestor lifecycle work")
         while self._task is not None:
             await asyncio.shield(self._task)
