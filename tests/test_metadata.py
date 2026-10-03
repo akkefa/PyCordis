@@ -279,12 +279,12 @@ async def test_service_legacy_provide_and_multiple_name_ambiguity() -> None:
 
 
 @pytest.mark.asyncio
-async def test_config_reference_is_inspectable_but_mount_still_rejects_validation() -> None:
+async def test_config_reference_is_inspectable_but_invalid_protocol_is_rejected() -> None:
     schema = object()
     spec = PluginSpec(lambda ctx, cfg: pytest.fail("must not execute"), PluginMeta(config=schema))
     assert inspect_plugin(spec).config is schema
     root = Context()
-    with pytest.raises(NotImplementedError, match="validation phase"):
+    with pytest.raises(TypeError, match="callable validate"):
         root.plugin(spec)
     assert root.registry.size == 0
     assert root.fiber.get_effects() == ()

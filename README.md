@@ -4,9 +4,9 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 9 adds explicit plugin metadata and reflection to Context, Fiber
-lifecycle, effects, registry, scoped reactive services, Service classes and events.
-Validation, method tracing and kernel event hooks remain future work.**
+**Status: Phase 10 adds synchronous configuration validation to Context, Fiber
+lifecycle, effects, registry, scoped services, events and explicit plugin metadata.
+Loader integration, method tracing and kernel event hooks remain future work.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -26,7 +26,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Configuration Validation. Read the
+The next reviewed increment is Loader, after reviewing kernel stability. Read the
+[Configuration guide](docs/config.md) and [Validation ADR](docs/adr/0011-config-validation.md). Read the
 [Metadata guide](docs/metadata.md) and [Metadata ADR](docs/adr/0010-plugin-metadata.md). Read the
 [Scope guide](docs/scope.md) and [Scope ADR](docs/adr/0009-scoped-services.md). Read the
 [Events guide](docs/events.md) and [Events ADR](docs/adr/0008-owned-events.md). Read the
@@ -138,3 +139,11 @@ Declare plugins with PluginMeta and plugin_meta, or pair an executable with
 PluginSpec. inspect_plugin reflects declarations without setup. Each mount keeps
 its own metadata and dependencies while runtimes share original callback identity.
 Run `uv run python examples/plugin_metadata.py`.
+
+## Configuration validation
+
+Declare a ConfigValidator through PluginMeta.config or Config. Its synchronous
+validate method supplies defaults or transforms input before activation.
+ValidationError supports structured field diagnostics. Fiber.raw_config preserves
+input for reloads; Fiber.config exposes the resolved value.
+Run `uv run python examples/config_validation.py`.

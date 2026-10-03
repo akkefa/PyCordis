@@ -1,5 +1,8 @@
 # Architecture and phase status
 
+Phase 10 adds synchronous configuration validation; loader integration and tracing
+remain future work. The phase history below describes earlier increments.
+
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
 Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
 mounting. Phase 5 adds service bindings and reactive dependency epochs. Phase 8 implements isolation and explicit intercept config resolution. Advanced
@@ -222,3 +225,12 @@ declaration before allocation. Shared PluginRuntime retains the first snapshot;
 Fiber retains per-mount metadata and dependencies. Service supports a single
 provide-name fallback. Config validation and method injection remain separate.
 See [metadata.md](metadata.md) and [ADR 0010](adr/0010-plugin-metadata.md).
+
+## Phase 10 implementation
+
+config.py defines the library-independent ConfigValidator protocol. Registry
+resolves the validator callable before allocating a mount; Fiber applies it after
+the loading checkpoint under the injected-service snapshot. raw_config preserves
+input, config exposes the last successful resolution. ValidationIssue/Error provide
+structured optional diagnostics. Failed validation uses existing rollback and
+restart semantics. Loader/config waterfalls and update APIs remain future work.

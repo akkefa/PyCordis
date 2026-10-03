@@ -204,7 +204,7 @@ def test_mount_without_loop_does_not_create_runtime() -> None:
 
 
 @pytest.mark.asyncio
-async def test_config_metadata_is_rejected_and_injection_remains_pending() -> None:
+async def test_invalid_validator_is_rejected_and_injection_remains_pending() -> None:
     ctx = Context()
 
     class Injected:
@@ -221,7 +221,7 @@ async def test_config_metadata_is_rejected_and_injection_remains_pending() -> No
 
     fiber = await ctx.plugin(Injected())
     assert fiber.state is FiberState.PENDING
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError, match="callable validate"):
         ctx.plugin(Validated())
     await fiber.dispose()
     assert ctx.registry.size == 0

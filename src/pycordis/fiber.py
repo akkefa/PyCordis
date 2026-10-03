@@ -10,6 +10,7 @@ from contextvars import ContextVar
 from enum import IntEnum
 from typing import TYPE_CHECKING, TypeAlias
 
+from .config import _validate_config
 from .effects import Effect, EffectMeta, _active_effects
 from .errors import CordisError
 from .scope import _current_context
@@ -101,7 +102,9 @@ class Fiber:
         self._parent = parent
         self._ctx = parent
         self._setup = setup
+        self._raw_config = config
         self._config = config
+        self._validate: Callable[[object], object] | None = None
         self._name = name
         self._root = root
         self._uid = 0 if root else None
@@ -147,7 +150,13 @@ class Fiber:
         return self._inject
 
     @property
+    def raw_config(self) -> object:
+        """Original input by identity; used again on each activation."""
+        return self._raw_config
+
+    @property
     def config(self) -> object:
+        """Last resolved config; raw input until first successful validation."""
         return self._config
 
     @property
@@ -254,9 +263,13 @@ class Fiber:
                     await asyncio.sleep(0)
                     if epoch is not None and self.uid is not None and self._epoch == epoch:
                         try:
-                            if self._setup is not None:
-                                effect = self._setup_effect(epoch)
-                                await effect
+                            resolved = _validate_config(self._validate, self.raw_config)
+                            # A synchronous validator may invalidate its own lifecycle.
+                            if self.uid is not None and self._epoch == epoch:
+                                self._config = resolved
+                                if self._setup is not None:
+                                    effect = self._setup_effect(epoch)
+                                    await effect
                             self._error = None
                         except (Exception, asyncio.CancelledError) as error:
                             self._error = error

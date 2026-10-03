@@ -8,6 +8,7 @@ from collections.abc import Iterator
 from types import MappingProxyType
 from typing import TYPE_CHECKING, cast
 
+from .config import _resolve_validator
 from .fiber import Fiber, Setup
 from .metadata import PluginMeta, _inspect_meta, _resolve_callback
 
@@ -102,8 +103,7 @@ class Registry:
         parent.fiber._bind_loop(loop)
         meta = _inspect_meta(plugin, callback)
         inject = meta.inject
-        if meta.config is not None:
-            raise NotImplementedError("plugin Config schemas require the validation phase")
+        validator = _resolve_validator(meta.config)
         key = self._key(callback)
         runtime = self._records.get(key)
         created = runtime is None
@@ -124,6 +124,7 @@ class Registry:
             runtime._fibers.append(fiber)
             fiber._runtime = runtime
             fiber._plugin_meta = meta
+            fiber._validate = validator
             fiber._unregister = lambda: self._remove(key, runtime, fiber)
             parent._services.refresh(fiber)
             return fiber

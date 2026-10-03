@@ -71,7 +71,8 @@ Service.resolve_config(base=None, head=None, ctx=None) selects explicit ctx,
 otherwise current_context(), otherwise its defining ctx. It validates the caller's
 root and service label. Service.merge_config(*layers) is an overridable static
 hook; default shallow merging matches the source fallback. This hook substitutes
-for custom merge behavior without pretending Config schemas are implemented.
+for custom merge behavior. Phase 10 plugin validation does not automatically
+validate operation intercept layers.
 
 ## Execution context and ownership
 
@@ -110,8 +111,8 @@ child emission still reaches all root listeners. Isolation does not automaticall
 filter every event and intercept config does not install middleware handlers.
 
 This phase provides explicit scope/config APIs. Attribute proxies, method tracing
-and shadow rebinding, Service prototype extension, automatic method injection, config
-schemas and internal kernel interception hooks remain future work.
+and shadow rebinding, Service prototype extension, automatic method injection, schema-aware
+operation config merging and internal kernel interception hooks remain future work.
 
 Phase 9 adds plugin-wide declaration decorators; their inject mappings use these
 existing per-mount intercept layers. Metadata intercept flags describe capabilities

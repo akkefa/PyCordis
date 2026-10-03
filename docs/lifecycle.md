@@ -36,7 +36,8 @@ asyncio.run(main())
 | fiber.parent | Mounting Context |
 | fiber.uid | Root 0; child uid per root; None once child disposal requested |
 | fiber.state | Read-only six-state enum with Harness numeric values |
-| fiber.config | Raw caller config by identity; no validation/update API yet |
+| fiber.config | Latest resolved config; raw input until first successful validation |
+| fiber.raw_config | Original caller input by identity, revalidated each activation |
 | fiber.error | Retained setup failure; cleared after successful activation |
 | fiber.cleanup_errors | Immutable snapshot of contained cleanup failures over lifetime |
 | await fiber / fiber.wait() | Settle current transitions; return Fiber or raise setup failure |
@@ -142,8 +143,9 @@ cancellation, registration rejection, root restart, loop binding, and no
 remaining lifecycle Tasks after a complete drain. Together with previous tests,
 55 cases pass on Python 3.11.15. TypeScript suites were inspected, not executed.
 
-Reactive service visibility, isolation, config validation, background task ownership, publication observers and registry
-identity are not implemented or claimed. Effect setup barriers, nested generators and async cleanup joining now have
+At Phase 2, reactive service visibility, isolation, config validation, background
+task ownership, publication observers and registry identity were not implemented.
+Later phase sections below describe the subsequent additions. Effect setup barriers, nested generators and async cleanup joining now have
 Phase 3 tests; see effects.md for their contracts and deviations.
 
 ## Reactive dependencies (Phase 5)
@@ -155,3 +157,10 @@ settle their work. Availability loss invalidates loading and unloads active
 consumers, retaining their original binding snapshot until teardown completes.
 Restoration loads a new snapshot. Restart rechecks requirements. Direct Fiber
 mounts remain the low-level API without declarations or registry notifications.
+
+## Configuration validation (Phase 10)
+
+Validation runs after the loading checkpoint and dependency snapshot, before
+setup. Failure uses existing FAILED/error/draining behavior; restart validates raw
+input again. A disposed or stale activation never enters setup. Direct low-level
+Fibers have no validator. Read [config.md](config.md) for the protocol and boundaries.

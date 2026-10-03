@@ -19,7 +19,7 @@ class PluginMeta:
     """Copied declaration snapshot; config/provide/intercept do not execute hooks.
 
     inject drives reactive mounting. provide/intercept are descriptive declarations.
-    config is a reserved validator reference, not applied before Phase 10.
+    config is a synchronous validator reference, applied before each activation.
     """
 
     name: str | None

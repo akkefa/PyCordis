@@ -32,7 +32,7 @@ name, except apply and lambda. No method scanning or method injection occurs.
 | inject | Required service names or name-to-config mappings; drives each mount's reactive dependencies and intercept layers |
 | provide | Copied, ordered, deduplicated service names; descriptive for general plugins |
 | intercept | Copied name-to-bool capability declarations; does not install handlers or config layers |
-| config | Opaque validator reference, conventionally Config; mounting rejects non-None until Phase 10 |
+| config | Synchronous validator reference, conventionally Config; validate(value) normalizes each activation |
 
 Mapping entries are read-only shallow copies; nested config values and the
 validator reference retain identity. This is declaration validation, not plugin
@@ -59,9 +59,10 @@ Fibers with different declarations. Later attribute edits affect subsequent moun
 only. Restart retains the mount declaration. Root and direct low-level Fibers
 have no plugin_meta. These inspection properties cannot be reassigned.
 
-Invalid declarations and reserved validators fail before allocating a Fiber or
+Invalid declarations and validators without callable validate fail before allocating a Fiber or
 mutating the registry. Reflection may read ordinary Python properties; it is not
-an evaluation sandbox. Config values still pass through unchanged by identity.
+an evaluation sandbox. Config values pass through by identity without a validator;
+see [config.md](config.md) for optional normalization and structured failures.
 
 Run `uv run python examples/plugin_metadata.py`. See
 [ADR 0010](adr/0010-plugin-metadata.md) for source evidence and deferred behavior.

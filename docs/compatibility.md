@@ -1,8 +1,8 @@
 # Compatibility status
 
-Phase 9 implements explicit plugin metadata plus Context/Fiber/effects, registry, scoped reactive services,
+Phase 10 implements synchronous configuration validation, explicit plugin metadata plus Context/Fiber/effects, registry, scoped reactive services,
 Service classes, events and explicit intercept config/caller scopes. Kernel event
-hooks, advanced reflection, validation and proxy tracing remain unimplemented.
+hooks, automatic method injection, loader config resolution and proxy tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -20,7 +20,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Isolation/intercept | Implemented explicit core | Identity labels, config layers/merge, Service predicates and ContextVar callers; proxy tracing future |
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
 | Decorators/metadata | Python adaptation | Immutable explicit records and identity-preserving plugin decorators; automatic method injection future |
-| Config validation/lazy resolution | Future | Harness fiber.ts and boot integration tests |
+| Config validation/lazy resolution | Python validation adaptation; lazy loader resolution future | Synchronous protocol, defaults/transforms, reload/failure handling; internal/config and update hooks deferred |
 | Loader/volatile config | Future | Separate loader; documented Harness patches |
 | JS cross-realm Symbol brand, Proxy machinery | Not mechanically portable | Behavioral equivalents where needed; JS-specific representation inapplicable |
 
@@ -325,3 +325,21 @@ than additive @Inject inheritance. Its method injection test remains future work
 because it requires child mounting and context shadow rebinding. No reusable flag
 or singleton mount behavior is inferred from unused conventions. Provide/intercept
 are descriptive for general plugins; configuration validation is Phase 10.
+
+## Phase 10 evidence
+
+Twenty-seven new cases in tests/test_config.py adapt Harness fiber.ts
+resolveConfig/ValidationError/_reload: identity passthrough, defaults and transforms
+before Service construction, structured paths, dependency-delayed validation, caller
+scope, failed validation cleanup, retained errors, restart/recovery, provider
+restoration, independent validators, awaitable rejection and disposal checkpoints.
+The existing invalid-Config metadata/registry cases now assert protocol errors.
+The Python suite totals 321 passing cases.
+
+Harness tool-web Config defaults and LocalSpillStore static Config demonstrate
+normalization before setup/constructors. Python validators return values directly
+and may raise ValidationError; no Standard Schema envelope or JavaScript symbol
+brand is emulated. Per-mount validators follow Phase 9 rather than the source
+shared runtime Config. No TypeScript suite or full Harness boot was executed.
+Internal/config expressions, internal/update, Fiber.update and schema library
+adapters remain future work.

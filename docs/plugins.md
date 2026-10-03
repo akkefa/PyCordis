@@ -58,8 +58,9 @@ Phase 5 adds reactive services: declare inject as a list/tuple of names or a
 name-to-config mapping. Context.inject(dependencies, callback) mounts the same
 callback form conveniently. See services.md for availability and snapshots; copied config mappings become
 per-mount intercept layers.
-Config schemas still fail explicitly. Config objects pass by identity without
-validation. Internal events and terminal Context disposal remain future work;
+Phase 10 accepts Config validators with callable validate(value). Configuration
+is normalized before activation; without a validator it passes by identity.
+See [config.md](config.md). Internal events and terminal Context disposal remain future work;
 root Fiber disposal preserves restart semantics.
 
 ## Service class plugins (Phase 6)

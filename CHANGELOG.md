@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Phase 10: synchronous ConfigValidator protocol, structured ValidationIssue /
+  ValidationError, raw and resolved Fiber config, validation before each valid
+  activation, failure cleanup/restart recovery, 27 new cases, guide, ADR and example.
+- No schema runtime dependencies; async validation, loader expression/update hooks
+  and schema-aware operation config merging remain future work.
+
 - Phase 9: immutable PluginMeta, PluginSpec, identity-preserving plugin_meta
   decorator, inspect_plugin, per-runtime/per-mount snapshots, Service provide-name
   fallback, 30 metadata cases, guide, ADR and runnable example.
@@ -56,4 +62,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- Kernel event publication hooks, advanced method reflection/validation and tracing remain future work; no release published.
+- Kernel event publication hooks, advanced method reflection and tracing remain future work; no release published.

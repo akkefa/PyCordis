@@ -53,7 +53,7 @@ class Service:
 
     @property
     def config(self) -> object:
-        """Original mount config, passed by identity without validation."""
+        """Resolved mount config, passed by identity after optional validation."""
         return self._config
 
     @property

@@ -29,8 +29,8 @@ Class plugin diagnostics use the class's declared name; an instance override
 changes only that instance's binding name. Changing instance.name later does not
 rename the binding that was registered.
 
-`service.ctx` and `service.config` are read-only references. Config passes by
-identity and is not validated or frozen. The defining context owns effects made
+`service.ctx` and `service.config` are read-only references. Resolved config passes by
+identity after optional plugin validation and is not frozen. The defining context owns effects made
 by service methods. Method calls do not rebind ctx to the caller. Resources should
 be registered through self.ctx.effect or returned/yielded from start.
 
@@ -82,3 +82,7 @@ its conventional provide attribute. Explicit constructor name wins over class
 name, which wins over this fallback. Display metadata name does not name the
 service slot. Multiple provide names require an explicit binding name; the base
 class still registers one service. See [metadata.md](metadata.md).
+
+Phase 10 validates plugin config before construction/start when Config or
+PluginMeta.config declares a validator. Service.config retains that resolved value
+by identity. This is separate from operation intercept merging. See [config.md](config.md).
