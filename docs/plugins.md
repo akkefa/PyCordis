@@ -54,7 +54,9 @@ mount's disposal. Capture fibers before deletion: the returned record's fibers
 are already empty. Independent cleanup starts in reverse order and may complete
 concurrently. Within a collected effect, cleanup is sequential.
 
-This phase does not resolve services, dependency declarations or config schemas.
-Nonempty inject and Config declarations fail explicitly. Config objects are
-passed by identity without validation. Internal events and terminal Context
-disposal remain future work; root Fiber disposal preserves restart semantics.
+Phase 5 adds reactive services: declare inject as a list/tuple of names or a
+name-to-None mapping. Context.inject(dependencies, callback) mounts the same
+callback form conveniently. See services.md for availability and snapshots.
+Config schemas still fail explicitly. Config objects pass by identity without
+validation. Internal events and terminal Context disposal remain future work;
+root Fiber disposal preserves restart semantics.

@@ -8,6 +8,7 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, cast
 
 from .fiber import Fiber, Setup
+from .services import normalize_inject
 
 if TYPE_CHECKING:
     from .context import Context
@@ -101,11 +102,7 @@ class Registry:
         loop = asyncio.get_running_loop()
         parent.fiber._assert_registration()
         parent.fiber._bind_loop(loop)
-        inject = getattr(plugin, "inject", None)
-        if inject is not None and not (
-            isinstance(inject, (list, tuple, dict)) and len(inject) == 0
-        ):
-            raise NotImplementedError("plugin injection requires the service/dependency phase")
+        inject = normalize_inject(getattr(plugin, "inject", None))
         if getattr(plugin, "Config", None) is not None:
             raise NotImplementedError("plugin Config schemas require the validation phase")
         key = self._key(callback)
@@ -122,10 +119,17 @@ class Registry:
             runtime = PluginRuntime(callback, name)
             self._records[key] = runtime
         try:
-            fiber = Fiber(parent, self._setup(runtime.callback), config, name=runtime.name)
+            fiber = Fiber(
+                parent,
+                self._setup(runtime.callback),
+                config,
+                name=runtime.name,
+                _dependencies=inject,
+            )
             runtime._fibers.append(fiber)
             fiber._runtime = runtime
             fiber._unregister = lambda: self._remove(key, runtime, fiber)
+            parent._services.refresh(fiber)
             return fiber
         except BaseException:
             if created and self._records.get(key) is runtime and not runtime._fibers:

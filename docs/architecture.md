@@ -2,7 +2,8 @@
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
 Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
-mounting. Services and events below remain proposed. The TypeScript source separates
+mounting. Phase 5 adds service bindings and reactive dependency epochs. Events,
+isolation and the Service abstraction below remain proposed. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
 LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
 
@@ -161,3 +162,15 @@ a fresh Fiber. Disposal unregisters immediately while parent ownership still
 joins teardown. Remounting during old cleanup creates a protected new record.
 Class plugins construct with context/config and optionally run start(). Injection,
 config validation, internal notifications and service-driven epochs remain future.
+
+## Phase 5 implementation
+
+See services.md and ADR 0006. services.py stores root-wide binding records and
+refreshes registered consumers when provider activity changes or a binding is
+removed. Fiber keeps candidate bindings separately from activation snapshots.
+A generation epoch invalidates setup when any required binding changes, including
+replacement by the same Fiber. Owned removal joins dependent lifecycle work;
+snapshots remain readable during cleanup. Explicit get preserves the source
+escape hatch, while require represents declared/ancestor snapshot access.
+No isolation labels, attribute proxy, accessor/mixin, trace wrappers, service
+base class, internal events or intercept config are implemented by this phase.

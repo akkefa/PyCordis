@@ -44,7 +44,7 @@ class Context:
     their parent's root and owning context; they do not create lifecycle work.
     """
 
-    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_registry", "_root")
+    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_registry", "_root", "_services")
 
     def __init__(self) -> None:
         self._parent: Context | None = None
@@ -57,6 +57,10 @@ class Context:
         from .registry import Registry
 
         self._registry = Registry(self)
+
+        from .services import ServiceRegistry
+
+        self._services = ServiceRegistry(self)
 
     @property
     def parent(self) -> Context | None:
@@ -72,8 +76,8 @@ class Context:
     def owner(self) -> Context:
         """The owning context, shared by ordinary extensions.
 
-        In this foundation every root owns itself. This identifies the scope
-        where a future Fiber will be bound; it is not a Fiber or a disposer.
+        Roots own themselves; plugin contexts own their mounted Fiber.
+        Ordinary extensions keep that owning context.
         """
         return self._owner
 
@@ -99,6 +103,37 @@ class Context:
         """Mount a plugin in this context and return its actual awaitable Fiber."""
         return self.registry.mount(self, plugin, config)
 
+    def provide(
+        self, name: str, value: object = None, *, check: Callable[[], bool] | None = None
+    ) -> Effect:
+        """Register an owned service; calling the Effect requests removal."""
+        return self._services.provide(self, name, value, check)
+
+    def get(self, name: str, strict: bool = True) -> object:
+        """Read a service without injection enforcement; missing returns None."""
+        return self._services.get(name, strict)
+
+    def require(self, name: str) -> object:
+        """Read a declared/owned binding from the activation snapshot."""
+        return self._services.require(self, name)
+
+    def set(self, name: str, value: object) -> None:
+        """Change only this Fiber's service value; no dependency restart."""
+        self._services.set(self, name, value)
+
+    def inject(self, dependencies: object, callback: Callable[[Context, object], object]) -> Fiber:
+        """Mount a callback that reloads when its required bindings change."""
+        from types import SimpleNamespace
+
+        return self.plugin(SimpleNamespace(inject=dependencies, apply=callback))
+
+    def refresh_services(self, *names: str) -> tuple[Fiber, ...]:
+        """Recheck dynamic availability predicates; await returned Fibers to settle."""
+        from .services import _name
+
+        self._services._assert_loop()
+        return self._services.notify(tuple(_name(name) for name in names))
+
     def effect(self, setup: Callable[[], object], label: str = "anonymous") -> Effect:
         """Create a reversible effect owned by this context's Fiber."""
         return self.fiber.effect(setup, label)
@@ -122,5 +157,6 @@ class Context:
         child._owner = self.owner
         child._fiber = self.fiber
         child._registry = self.registry
+        child._services = self._services
         child._metadata = _Metadata(entries, self.metadata)
         return child

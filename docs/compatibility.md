@@ -1,7 +1,8 @@
 # Compatibility status
 
-Phase 4 implements Context views, Fiber lifecycle, reversible effects and
-plugin registry. Services and events remain unimplemented.
+Phase 5 implements Context views, Fiber lifecycle, effects, plugin registry and
+root-scoped reactive service dependencies. Service abstraction, events, isolation
+and tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -12,8 +13,8 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Fiber lifecycle | Partial: implemented | State/epoch transitions, setup/cleanup, ownership, restart/disposal; no services/publication events |
 | Effects | Implemented with explicit deviations | Manual/automatic, generators, rollback and in-flight joins; drain-all and Python finalization differ |
 | Registry/plugin forms | Implemented with Python adaptations | Functions, callable objects, apply methods, classes, nested mounts, shared runtimes |
-| Services and injection | Future | service.spec.ts, reflect.spec.ts; required-service snapshot and inactive access |
-| Reactive reload | Future | fiber.spec.ts provider disposal/loading races; isolate.spec.ts service restoration |
+| Services and injection | Implemented for one root scope | Owned provide/get/set, required snapshots, inactive access, reactive inject |
+| Reactive reload | Implemented for root-wide bindings | Provider loss/restoration, loading/unloading races; isolated scopes remain future |
 | Events | Future | events.spec.ts modes/filtering/errors; preserve zero/empty-string bail |
 | Isolation/intercept | Future | isolate.spec.ts independent/shared labels and filtered events |
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
@@ -134,3 +135,48 @@ remount during old teardown. These are Python-specific regression coverage.
 Nonempty inject and Config declarations raise NotImplementedError until their
 phases. Dependency epochs, schema validation, internal notifications, Config
 metadata and event filters are not claimed by registry coverage.
+
+## Phase 5 evidence
+
+41 test_services.py cases adapt Harness reflect.ts/fiber.ts/registry.ts at
+639ed015397290b3745d163aafe02ffee4aa3f84. Pinned upstream baseline
+56b3d4f725681cf4556c1a8695a709cc3b6eed74 supplies these source test themes:
+
+| Source test | Python coverage / classification |
+|---|---|
+| reflect.spec.ts: access check | Duplicate registration and owner-only set; require substitutes explicit snapshot access for attributes |
+| reflect.spec.ts: service injection | Owned provide/get/set and child inherited snapshots; mixins and tracing future |
+| reflect.spec.ts: service inject leak | Disposed/inactive required snapshot rejection; Python adaptation |
+| service.spec.ts: pending inject | Loading provider blocks consumers; uses owned provide instead of future Service class/events |
+| service.spec.ts: multiple injects | Multi-requirement activation and transitive loss/restoration; Python adaptation |
+| fiber.spec.ts: inertia lock 1/2/3 | Real binding changes during loading/unloading; Python Event barriers replace timers |
+| Harness lifecycle ownership rules | Shutdown joins dependent cleanup, cancelled waiters preserve owned removal, stale checkpoint skips setup |
+
+Total Python suite: 151 passing cases. No TypeScript suite or live Harness boot
+integration was executed. Older phase evidence above describes historical scope.
+
+Retained: duplicate bindings rejected, registration is an owned effect, strict
+get returns only ACTIVE providers, get bypasses injection requirements, set is
+owner-only and does not reload, missing requirements settle PENDING, activation
+publishes services, dependency loss unloads, restoration reloads, old snapshots
+survive cleanup, failed consumers can retry on notification, predicate failures
+are logged and block consumers.
+
+Python adaptations: explicit require rather than attribute Proxy access, immutable
+ordered dependency tuples, list/tuple or name-to-None maps, synchronous predicate
+closures, refresh_services for predicate changes, None for missing services,
+scheduled async removal, and explicit loop affinity. Root/ancestor-owned bindings
+are available through require without redeclaration, following source store walks.
+
+Intentional strengthening: epochs use unique binding generations instead of
+provider uids, preventing stale activation when the same provider replaces its
+binding during loading. Removal skips joining structural ancestors and current
+execution owners because they already own that teardown; this prevents cyclic
+self-joins during root shutdown. Other affected consumers are joined before the
+provider snapshot entry is released. Existing drain-all nested cleanup applies.
+
+Future: Service abstraction (Phase 6), accessor/mixin/property syntax, tracing,
+isolation/intercept labels/config, optional dependencies, event notifications,
+config validation and terminal Context disposal. Mapping intercept values fail
+explicitly rather than being silently ignored. Services share a single root scope;
+Context.extend only inherits metadata/ownership and does not isolate bindings.

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Phase 5: owned service bindings, get/set/require, reactive inject declarations,
+  activation/cleanup snapshots, provider availability notifications, joined
+  dependent teardown, 41 service cases, guide, ADR and runnable example.
+- Intentional compatibility strengthening: binding generation epochs detect
+  same-provider replacement during loading; structural ancestors are excluded
+  from service-removal joins to prevent awaiting their own cleanup.
+
+
 - Phase 4: root-local Registry, Context.plugin mounting, shared PluginRuntime
   inspection, function/object/class forms, synchronous unregister with joined
   teardown, 26 registry test cases, guide, ADR and runnable example.
@@ -20,4 +28,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- No services or events implemented; no release published.
+- Service abstraction, events and isolation remain future work; no release published.

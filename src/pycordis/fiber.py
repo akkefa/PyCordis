@@ -1,4 +1,4 @@
-"""Serialized Fiber lifecycle with owned effects, prior to registry and services."""
+"""Serialized Fiber lifecycle with owned effects, with reactive service epochs."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from .errors import CordisError
 if TYPE_CHECKING:
     from .context import Context
     from .registry import PluginRuntime
+    from .services import _Binding
 
 Cleanup: TypeAlias = Callable[[], object]
 Setup: TypeAlias = Callable[["Context", object], object]
@@ -51,14 +52,20 @@ class Fiber:
     Direct construction is the low-level Phase 2 API. It starts setup on the
     running loop after a checkpoint. Setup may be synchronous or asynchronous
     and produce cleanup callables or sync/async iterables through the effect
-    engine. Registry normalization and services remain deferred.
+    engine. Registry mounts add declared service dependencies.
     """
 
     _uid: int | None
     _counter: int
 
     def __init__(
-        self, parent: Context, setup: Setup, config: object = None, *, name: str | None = None
+        self,
+        parent: Context,
+        setup: Setup,
+        config: object = None,
+        *,
+        name: str | None = None,
+        _dependencies: tuple[str, ...] = (),
     ) -> None:
         # Validate before changing parent ownership or allocating a uid.
         loop = asyncio.get_running_loop()
@@ -75,7 +82,9 @@ class Fiber:
         self._ctx._fiber = self
         self._parent_cleanup: Cleanup | None = self.dispose
         parent.fiber.add_cleanup(self._parent_cleanup)
-        self._set_epoch((), loop=loop)
+        self._inject: tuple[str, ...] = _dependencies
+        if not _dependencies:
+            self._set_epoch((), loop=loop)
 
     @classmethod
     def _create_root(cls, ctx: Context) -> Fiber:
@@ -105,6 +114,9 @@ class Fiber:
         self._parent_cleanup = None
         self._runtime: PluginRuntime | None = None
         self._unregister: Callable[[], None] | None = None
+        self._inject = ()
+        self._bindings: dict[str, _Binding] = {}
+        self._store: dict[str, _Binding] | None = {}
 
     @property
     def parent(self) -> Context:
@@ -118,6 +130,11 @@ class Fiber:
     def runtime(self) -> PluginRuntime | None:
         """Shared registry record; None for root and direct low-level mounts."""
         return self._runtime
+
+    @property
+    def inject(self) -> tuple[str, ...]:
+        """Immutable ordered service requirements for this mount."""
+        return self._inject
 
     @property
     def config(self) -> object:
@@ -179,7 +196,7 @@ class Fiber:
         return current
 
     def _set_epoch(self, epoch: Epoch, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
-        """Private input for later reactive service wiring; None means unavailable."""
+        """Apply the dependency binding epoch; None means unavailable."""
         self._request_epoch(epoch, loop=loop)
         self._dependency_epoch = epoch
 
@@ -195,10 +212,16 @@ class Fiber:
         self._epoch = epoch
         if self._task is not None:
             return
-        self._state = (
+        self._change_state(
             FiberState.LOADING if old is None and epoch is not None else FiberState.UNLOADING
         )
         self._task = current.create_task(self._drive())
+
+    def _change_state(self, state: FiberState) -> None:
+        old = self._state
+        self._state = state
+        if old is not state and (old is FiberState.ACTIVE or state is FiberState.ACTIVE):
+            self.ctx._services.owner_changed(self)
 
     def _setup_effect(self, epoch: Epoch) -> Effect:
         setup = self._setup
@@ -216,6 +239,7 @@ class Fiber:
             while True:
                 if self.state is FiberState.LOADING:
                     epoch = self._epoch
+                    self._store = dict(self._bindings)
                     await asyncio.sleep(0)
                     if epoch is not None and self.uid is not None and self._epoch == epoch:
                         try:
@@ -235,21 +259,22 @@ class Fiber:
                         and self._epoch == epoch
                         and self._error is None
                     ):
-                        self._state = FiberState.ACTIVE
-                        return
-                    self._state = FiberState.UNLOADING
+                        self._change_state(FiberState.ACTIVE)
+                        if self._epoch == epoch:
+                            return
+                    self._change_state(FiberState.UNLOADING)
 
                 await self._unload()
                 if self.uid is None:
-                    self._state = FiberState.DISPOSED
+                    self._change_state(FiberState.DISPOSED)
                     self._detach()
                     return
                 if self._epoch is None:
-                    self._state = (
+                    self._change_state(
                         FiberState.FAILED if self._error is not None else FiberState.PENDING
                     )
                     return
-                self._state = FiberState.LOADING
+                self._change_state(FiberState.LOADING)
         finally:
             self._task = None
             _executing.reset(token)
@@ -266,6 +291,8 @@ class Fiber:
                 logging.getLogger("pycordis").error(
                     "Fiber %s cleanup failed", self.name, exc_info=result
                 )
+
+        self._store = {} if self._root else None
 
     async def _run_cleanup(self, cleanup: Cleanup) -> None:
         result = cleanup._dispose_owned() if isinstance(cleanup, Effect) else cleanup()
@@ -318,7 +345,7 @@ class Fiber:
                 self._unregister = None
             self._epoch = None
             if self._task is None:
-                self._state = FiberState.UNLOADING
+                self._change_state(FiberState.UNLOADING)
                 self._task = loop.create_task(self._drive())
         return _Disposal(self)
 
@@ -327,5 +354,8 @@ class Fiber:
         if self.uid is None:
             raise CordisError("INACTIVE_EFFECT")
         self._request_epoch(None)
-        self._request_epoch(self._dependency_epoch)
+        if self.runtime is not None:
+            self.ctx._services.refresh(self)
+        else:
+            self._request_epoch(self._dependency_epoch)
         return self

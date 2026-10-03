@@ -204,7 +204,7 @@ def test_mount_without_loop_does_not_create_runtime() -> None:
 
 
 @pytest.mark.asyncio
-async def test_future_injection_and_config_metadata_are_rejected_before_mount() -> None:
+async def test_config_metadata_is_rejected_and_injection_remains_pending() -> None:
     ctx = Context()
 
     class Injected:
@@ -219,9 +219,11 @@ async def test_future_injection_and_config_metadata_are_rejected_before_mount() 
         def __call__(self, inner: Context, config: object) -> None:
             raise AssertionError("must not run")
 
-    for plugin in [Injected(), Validated()]:
-        with pytest.raises(NotImplementedError):
-            ctx.plugin(plugin)
+    fiber = await ctx.plugin(Injected())
+    assert fiber.state is FiberState.PENDING
+    with pytest.raises(NotImplementedError):
+        ctx.plugin(Validated())
+    await fiber.dispose()
     assert ctx.registry.size == 0
 
 

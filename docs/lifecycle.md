@@ -145,3 +145,13 @@ remaining lifecycle Tasks after a complete drain. Together with previous tests,
 Reactive service visibility, isolation, config validation, background task ownership, publication observers and registry
 identity are not implemented or claimed. Effect setup barriers, nested generators and async cleanup joining now have
 Phase 3 tests; see effects.md for their contracts and deviations.
+
+## Reactive dependencies (Phase 5)
+
+Registered mounts now derive their epochs from required service bindings.
+Missing dependencies settle PENDING; await never waits for a future provider.
+Provider activation schedules consumers; await those consumers separately to
+settle their work. Availability loss invalidates loading and unloads active
+consumers, retaining their original binding snapshot until teardown completes.
+Restoration loads a new snapshot. Restart rechecks requirements. Direct Fiber
+mounts remain the low-level API without declarations or registry notifications.
