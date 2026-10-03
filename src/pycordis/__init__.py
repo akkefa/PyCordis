@@ -1,5 +1,7 @@
-"""PyCordis package scaffold; runtime APIs will be introduced phase by phase."""
+"""A Python plugin runtime developed in reviewed, incremental phases."""
 
 from __future__ import annotations
 
-__all__: list[str] = []
+from .context import Context
+
+__all__ = ["Context"]

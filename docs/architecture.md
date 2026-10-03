@@ -1,6 +1,7 @@
-# Architecture proposal — Phase 0
+# Architecture and phase status
 
-These modules are proposed, not implemented. The TypeScript source separates
+Phase 1 implements only Context hierarchy and explicit metadata views in
+context.py. Other modules below remain proposed. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
 LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
 
@@ -126,3 +127,11 @@ creates a coroutine, unlike JavaScript async functions which begin execution.
   including waterfall guards, failure latch and wrapper identity corrections.
 - Version/name and build choices are provisional; no new runtime dependency,
   repository URL, or public 0.1.0 API is invented during bootstrap.
+
+
+## Phase 1 implementation
+
+See [Context guide](context.md) and [ADR 0002](adr/0002-context-foundation.md).
+Context extensions share root and owner and retain an explicit parent link.
+Metadata is a separate read-only mapping, not a service registry. No fake Fiber,
+service store or lifecycle method is introduced to fill the architecture map.
