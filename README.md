@@ -4,8 +4,8 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 6 Context, Fiber lifecycle, effects, plugin registry, reactive
-service dependencies and the Service base class. Events and isolation remain future work.**
+**Status: Phase 7 Context, Fiber lifecycle, effects, registry, reactive services,
+Service classes and owned event dispatch. Isolation and tracing remain future work.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -25,7 +25,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Events. Read the
+The next reviewed increment is Scope, Isolation and Interception. Read the
+[Events guide](docs/events.md) and [Events ADR](docs/adr/0008-owned-events.md). Read the
 [Service class guide](docs/service.md) and [Service ADR](docs/adr/0007-service-abstraction.md). Read the
 [Services guide](docs/services.md) and [Services ADR](docs/adr/0006-reactive-services.md). Read the
 [Plugin guide](docs/plugins.md) and [Registry ADR](docs/adr/0005-plugin-registry.md). Read the
@@ -109,3 +110,12 @@ Mount with `await ctx.plugin(Database, config)`. The instance registers itself,
 and dependents wait for start to finish. Optional check gates dependencies;
 ordinary `__call__` supports callable services. Run
 `uv run python examples/service_plugin.py`.
+
+## Events
+
+Listeners registered with `ctx.on`/`ctx.once` are owned Effects. Use emit/bail for
+synchronous callbacks, parallel/serial for async callbacks, and waterfall for
+middleware chaining. None/False mean no bail; zero and empty values stop dispatch.
+Explicit filter_ selects listener contexts; child dispatch is root-wide by default.
+Run `uv run python examples/events.py`. Kernel publication/interception hooks and
+advanced scopes remain future work.

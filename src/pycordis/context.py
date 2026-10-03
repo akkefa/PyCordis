@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Self
 
 if TYPE_CHECKING:
     from .effects import Effect
+    from .events import EventFilter, Events, Listener
     from .fiber import Fiber
     from .registry import Registry
 
@@ -44,7 +45,16 @@ class Context:
     their parent's root and owning context; they do not create lifecycle work.
     """
 
-    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_registry", "_root", "_services")
+    __slots__ = (
+        "_events",
+        "_fiber",
+        "_metadata",
+        "_owner",
+        "_parent",
+        "_registry",
+        "_root",
+        "_services",
+    )
 
     def __init__(self) -> None:
         self._parent: Context | None = None
@@ -61,6 +71,9 @@ class Context:
         from .services import ServiceRegistry
 
         self._services = ServiceRegistry(self)
+        from .events import Events
+
+        self._events = Events(self)
 
     @property
     def parent(self) -> Context | None:
@@ -134,6 +147,42 @@ class Context:
         self._services._assert_loop()
         return self._services.notify(tuple(_name(name) for name in names))
 
+    @property
+    def events(self) -> Events:
+        """Scoped event facade; listener storage is shared by the root."""
+        return self._events
+
+    def on(
+        self, name: str, listener: Listener, *, prepend: bool = False, global_: bool = False
+    ) -> Effect:
+        return self.events.on(name, listener, prepend=prepend, global_=global_)
+
+    def once(
+        self, name: str, listener: Listener, *, prepend: bool = False, global_: bool = False
+    ) -> Effect:
+        return self.events.once(name, listener, prepend=prepend, global_=global_)
+
+    def emit(self, name: str, *args: object, filter_: EventFilter | None = None) -> None:
+        self.events.emit(name, *args, filter_=filter_)
+
+    def bail(self, name: str, *args: object, filter_: EventFilter | None = None) -> object:
+        return self.events.bail(name, *args, filter_=filter_)
+
+    async def parallel(self, name: str, *args: object, filter_: EventFilter | None = None) -> None:
+        await self.events.parallel(name, *args, filter_=filter_)
+
+    async def serial(self, name: str, *args: object, filter_: EventFilter | None = None) -> object:
+        return await self.events.serial(name, *args, filter_=filter_)
+
+    def waterfall(
+        self,
+        name: str,
+        *args: object,
+        next_: Callable[[], object],
+        filter_: EventFilter | None = None,
+    ) -> object:
+        return self.events.waterfall(name, *args, next_=next_, filter_=filter_)
+
     def effect(self, setup: Callable[[], object], label: str = "anonymous") -> Effect:
         """Create a reversible effect owned by this context's Fiber."""
         return self.fiber.effect(setup, label)
@@ -158,5 +207,6 @@ class Context:
         child._fiber = self.fiber
         child._registry = self.registry
         child._services = self._services
+        child._events = self.events._view(child)
         child._metadata = _Metadata(entries, self.metadata)
         return child

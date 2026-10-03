@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Phase 7: scoped Events facade, owned on/once, prepend/global/filter options,
+  emit/parallel/serial/bail/waterfall, dispatch diagnostics, 57 event test cases,
+  guide, ADR and runnable example.
+- Python event policy: emit/bail reject awaitable results; async waterfall bridges
+  synchronous tails; once guards recursive stale snapshots. Async dispatch is
+  caller-owned and cancellable, distinct from shielded Fiber lifecycle waits.
+
+
 - Phase 6: exported Service base class with declared/overridden name, defining
   context, original config, owned registration, start/check hooks and native
   callable subclasses; 25 service-class cases, guide, ADR and runnable example.
@@ -33,4 +41,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- Events, isolation and tracing remain future work; no release published.
+- Kernel event publication hooks, isolation and tracing remain future work; no release published.

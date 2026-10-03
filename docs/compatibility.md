@@ -1,7 +1,7 @@
 # Compatibility status
 
-Phase 6 implements Context views, Fiber lifecycle, effects, plugin registry,
-root-scoped reactive service dependencies and the Service base class. Events,
+Phase 7 implements Context, Fiber lifecycle, effects, registry, reactive services,
+Service classes and owned event dispatch. Kernel publication/interception hooks,
 isolation and tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
@@ -16,7 +16,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Services and injection | Implemented for one root scope | Owned provide/get/set, required snapshots, inactive access, reactive inject |
 | Service abstraction | Implemented core with Python adaptations | Constructor-owned instance, start/check, native callable subclasses; advanced helpers deferred |
 | Reactive reload | Implemented for root-wide bindings | Provider loss/restoration, loading/unloading races; isolated scopes remain future |
-| Events | Future | events.spec.ts modes/filtering/errors; preserve zero/empty-string bail |
+| Events | Implemented public dispatch with Python policies | Owned listeners, five modes, explicit filtering, error groups; kernel hooks future |
 | Isolation/intercept | Future | isolate.spec.ts independent/shared labels and filtered events |
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
 | Decorators/metadata | Future | decorator.spec.ts; explicit Python declarations to evaluate |
@@ -216,3 +216,50 @@ separation of construction from class-plugin initialization.
 Deferred: Service filter/extend helpers, interceptor config merge, decorators/init
 hook metadata, callable proxy tracing and caller-context association. Services
 remain unwrapped Python objects with a defining context. Events are Phase 7.
+
+## Phase 7 evidence
+
+57 test_events.py cases adapt Harness events.ts at
+639ed015397290b3745d163aafe02ffee4aa3f84 and upstream events.spec.ts at
+56b3d4f725681cf4556c1a8695a709cc3b6eed74. Total Python suite: 233 cases.
+No TypeScript suite or live Harness integration was executed.
+
+| Source test/behavior | Python coverage/classification |
+|---|---|
+| ctx.on() / ctx.once() | Owned registration, manual removal, repeated calls and lifecycle cleanup; Effect return adapts disposer |
+| ctx.parallel() | Concurrent callbacks, all-settled sync/async errors, explicit filter; ExceptionGroup adapts AggregateError |
+| ctx.emit() | Inline notification, errors stop subsequent callbacks; async results deliberately rejected |
+| ctx.serial() / ctx.bail() | Ordered first meaningful result/error; identity checks preserve zero/empty bail values |
+| ctx.waterfall() | Before/after order, fixed arguments, zero-argument continuation, veto; async bridge is Python adaptation |
+| dispatch filtering / EventOptions | Explicit filter_(registering_context), prepend, global_ bypass; no JS this binding |
+| internal/dispatch | Telemetry before public snapshot, no internal-event recursion; parallel retains historical emit mode |
+
+Additional cases cover snapshot mutation, duplicate callback ownership, recursive
+and concurrent once, listener cleanup on provider loss/startup failure/restart,
+PENDING registration and inactive guards, dispatch cancellation, async callable
+waterfall, returned awaitables, self-settling handles and indirect awaitable cycles.
+
+Retained: callback snapshots, prepend order, root-shared listener storage, owned
+removal, synchronous errors stopping emit/bail, all-settled parallel aggregation,
+serial bail, fixed waterfall args and veto. Repeated next calls preserve the
+pinned shared-queue/terminal-repeat behavior; newer upstream guards are not adopted.
+
+Python adaptations: strings for event names, keyword options, scoped Events
+facades, owned Effect handles (no disposer bool result), explicit filter_ rather
+than thisArg/Context.filter, immutable diagnostic argument tuples and filter
+predicate in the fourth diagnostic slot. parallel raises ExceptionGroup even for
+one failure; cancelled listeners use BaseExceptionGroup. Cancelling an async
+dispatch cancels its awaited callbacks and runs Python finally blocks. It does
+not dispose listener registrations or shield dispatch work like Fiber settlement.
+
+Intentional policies: emit/bail reject and close returned bare coroutines, instead
+of scheduling/ignoring Promise results. Already-created Tasks/Futures remain caller
+owned. Async waterfall continuations bridge sync tails and flatten nested awaitable
+results; self-settling Effect/Fiber handles are preserved and indirect cycles raise.
+Once guards against invocation twice through an outer stale snapshot, strengthening
+the source wrapper's removal-only behavior under reentrant dispatch.
+
+Deferred: internal/listener interception, scoped internal/update routing, kernel
+plugin/status/service/config notifications, proxy get/set events and telemetry
+this binding. Scope/isolation/interception is Phase 8. Event filters already supply
+an explicit callback-context seam; they do not establish isolation labels.

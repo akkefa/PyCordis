@@ -2,8 +2,8 @@
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
 Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
-mounting. Phase 5 adds service bindings and reactive dependency epochs. Events,
-isolation and advanced tracing below remain proposed. Phase 6 adds the Service
+mounting. Phase 5 adds service bindings and reactive dependency epochs. Isolation and advanced tracing below remain proposed. Phase 7 implements the
+owned event bus; kernel event producers/interceptors are still future. Phase 6 adds the Service
 base class on top of owned bindings. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
 LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
@@ -186,3 +186,15 @@ consumer publication and restart therefore reuse the same Fiber/effect engine.
 Native __call__ replaces callable-instance proxy construction. Methods retain
 their defining context; tracing, extend/filter helpers and intercept resolution
 are deferred until their corresponding scope/tracing phases.
+
+## Phase 7 implementation
+
+See events.md and ADR 0008. Each Context has a scoped Events facade sharing a
+root listener store. Registrations use owned Effects; snapshot dispatch separates
+inline emit/bail, concurrent all-settled parallel, ordered bail serial and waterfall
+continuations. Explicit filters inspect registering contexts; global_ bypasses them.
+No implicit child filter or listener-context rebinding is added. Async dispatch
+belongs to its caller, while registration cleanup belongs to the defining Fiber.
+Waterfall's zero-argument continuation retains fixed event arguments and can await
+sync tails once an async middleware runs. Non-internal dispatch publishes diagnostic
+internal/dispatch; provider/plugin/status/config interception producers are deferred.
