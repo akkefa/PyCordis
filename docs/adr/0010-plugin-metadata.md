@@ -11,8 +11,9 @@ normalizes array/object dependencies. service.ts uses name/provide for a Service
 binding. The inspected core does not implement a reusable flag.
 
 Pinned upstream 56b3d4f725681cf4556c1a8695a709cc3b6eed74,
-packages/core/tests/decorator.spec.ts, exercises class dependency declarations,
-inherited injection and method injection. Its method decorator creates a child
+packages/core/tests/decorator.spec.ts, contains the @Inject on class method case. Class dependency declarations are
+instead informed by registry.ts and service.spec.ts multiple injects. Its method
+decorator creates a child
 injection mount and uses context shadow rebinding; this is more than metadata.
 
 ## Decision

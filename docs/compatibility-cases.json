@@ -1,0 +1,1079 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+  "harness_commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+  "scope": "All literal it() cases in the 11 pinned upstream core spec files and the pinned Harness Cordis lifecycle regression file; excludes unrelated Harness integration suites and newer upstream tests.",
+  "source_files": [
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/associate.spec.ts",
+      "sha256": "80ba3efdcdf46ea6173690d4061bbf949b6a2bc01fabb718ee3cfca2b4a8f83e",
+      "test_count": 5
+    },
+    {
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "path": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "sha256": "c98e874987a5d2219fc0f6ce3709d9a514739a0f738a66692f12b4d2875033df",
+      "test_count": 11
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/decorator.spec.ts",
+      "sha256": "3ff2f48fcdc0df7b88c865ceeb9bf2b7e238af781174425c661ad4145ed13868",
+      "test_count": 1
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/dispose.spec.ts",
+      "sha256": "da0228ae703f551cf14dbeb7de6a18810a49840256b64618ed693ae06039d735",
+      "test_count": 13
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/events.spec.ts",
+      "sha256": "9183509d6bb2d053689fe1cc83753c049e456357303c8e9bcde8761f955b7633",
+      "test_count": 7
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/fiber.spec.ts",
+      "sha256": "282b2c0fba2ced695b0a79487b651abffe81d3afcb0cd735ba1944b4296a4a1c",
+      "test_count": 6
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/invoke.spec.ts",
+      "sha256": "80c3815076e5907abcf80837daef02a90fe6353029bda9883849a915c6bf71bd",
+      "test_count": 1
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/isolate.spec.ts",
+      "sha256": "dcd9ada046c1c10846db9ff3011642cdd4188dd22b2f3d2257f88db1a1c9a589",
+      "test_count": 3
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/logger.spec.ts",
+      "sha256": "09f60750b7a78708571f9db6f141f48c04bf66dd6bd0250a1b3522a5569f0e12",
+      "test_count": 6
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/plugin.spec.ts",
+      "sha256": "c2600e58732f2bc16ec69c59b8f672d506778a20c16ef668419bbfacccfe0a15",
+      "test_count": 10
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/reflect.spec.ts",
+      "sha256": "72e4a35944d9b5da65452f98e756b1b9e96772cbfc5576a83f8391f6f875700c",
+      "test_count": 4
+    },
+    {
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "path": "packages/core/tests/service.spec.ts",
+      "sha256": "4cd5e5b1fc99c2fdc08936aab196d5efc86902255be3638cfed2ef6d6893dfbc",
+      "test_count": 5
+    }
+  ],
+  "cases": [
+    {
+      "id": "upstream/associate/service-injection",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/associate.spec.ts",
+      "source_line": 5,
+      "source_title": "service injection",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Dotted service/property association, tracker proxies and mixin accessors are not implemented; flat names are not equivalent.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/associate/property-injection",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/associate.spec.ts",
+      "source_line": 30,
+      "source_title": "property injection",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Dotted service/property association, tracker proxies and mixin accessors are not implemented; flat names are not equivalent.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/associate/associated-type-service-injection",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/associate.spec.ts",
+      "source_line": 58,
+      "source_title": "associated type - service injection",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Dotted service/property association, tracker proxies and mixin accessors are not implemented; flat names are not equivalent.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/associate/associated-type-accessor-injection",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/associate.spec.ts",
+      "source_line": 114,
+      "source_title": "associated type - accessor injection",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Dotted service/property association, tracker proxies and mixin accessors are not implemented; flat names are not equivalent.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/associate/inspect",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/associate.spec.ts",
+      "source_line": 177,
+      "source_title": "inspect",
+      "classification": "not applicable in Python",
+      "coverage": "none",
+      "notes": "JavaScript Function.toString preserving class source through traced method calls has no Python representation contract.",
+      "python_tests": []
+    },
+    {
+      "id": "harness/cordis-lifecycle/makes-an-effect-visible-to-a-reentrant-owner-restart-and-awaits-setup-plus-cleanup",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 10,
+      "source_title": "makes an effect visible to a reentrant owner restart and awaits setup plus cleanup",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Asyncio gates preserve setup/cleanup joining; owner waiting occurs outside the effect to respect Python cycle guards.",
+      "python_tests": [
+        "tests/compatibility/test_harness.py::test_reentrant_restart_joins_effect_setup_and_returned_cleanup"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/rolls-back-collected-cleanup-and-its-owner-list-entry-when-setup-throws-synchronously",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 47,
+      "source_title": "rolls back collected cleanup and its owner-list entry when setup throws synchronously",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Synchronous generator rollback drains cleanup and effect diagnostics.",
+      "python_tests": [
+        "tests/test_effects.py::test_sync_setup_failure_rolls_back_and_detaches"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/makes-a-reentrant-owner-restart-await-asynchronous-rollback-after-synchronous-setup-failure",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 60,
+      "source_title": "makes a reentrant owner restart await asynchronous rollback after synchronous setup failure",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Async rollback remains owned until restart joins it; Events replace Promise.withResolvers.",
+      "python_tests": [
+        "tests/compatibility/test_harness.py::test_reentrant_restart_joins_async_rollback_after_sync_setup_error"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/keeps-ordinary-teardown-synchronous-and-the-public-disposer-single-shot",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 86,
+      "source_title": "keeps ordinary teardown synchronous and the public disposer single-shot",
+      "classification": "identical semantic behavior",
+      "coverage": "ported",
+      "notes": "Immediate None-returning cleanup runs once and detaches.",
+      "python_tests": [
+        "tests/test_effects.py::test_sync_setup_and_cleanup_are_immediate_single_shot"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/rejects-cleanup-time-registration-while-a-restart-is-unloading",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 98,
+      "source_title": "rejects cleanup-time registration while a restart is unloading",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "INACTIVE_EFFECT and root restart semantics retained through explicit effect API.",
+      "python_tests": [
+        "tests/test_effects.py::test_cleanup_cannot_escape_owner_unload_but_manual_cleanup_can_register"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/keeps-effect-registration-legal-while-child-fibers-are-pending-and-loading",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 117,
+      "source_title": "keeps effect registration legal while child fibers are PENDING and LOADING",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "State legality is tested, but source assertion uses internal/plugin publication hooks, which remain missing.",
+      "python_tests": [
+        "tests/test_effects.py::test_effects_are_legal_pending_and_loading_and_drain_after_failure"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/resolves-dependencies-that-internal-plugin-adds-before-child-activation",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 141,
+      "source_title": "resolves dependencies that internal/plugin adds before child activation",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Observer-added mutable inject and internal/plugin publication are not implemented.",
+      "python_tests": []
+    },
+    {
+      "id": "harness/cordis-lifecycle/rolls-back-parent-and-runtime-ownership-when-internal-plugin-publication-throws",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 164,
+      "source_title": "rolls back parent and runtime ownership when internal/plugin publication throws",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "No internal/plugin publication seam exists to inject this failure.",
+      "python_tests": []
+    },
+    {
+      "id": "harness/cordis-lifecycle/contains-teardown-notification-failures-so-ownership-cleanup-and-peers-complete",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 175,
+      "source_title": "contains teardown notification failures so ownership cleanup and peers complete",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "General cleanup errors are contained, but teardown publication hooks are not implemented.",
+      "python_tests": []
+    },
+    {
+      "id": "harness/cordis-lifecycle/makes-a-loading-parent-join-child-cleanup-started-before-its-unload-snapshot",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 197,
+      "source_title": "makes a LOADING parent join child cleanup started before its unload snapshot",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Earlier child cleanup joins are tested; internal/plugin publication and LOADING observer race remain unported.",
+      "python_tests": [
+        "tests/test_fiber.py::test_parent_disposal_joins_child_disposal_started_earlier"
+      ]
+    },
+    {
+      "id": "harness/cordis-lifecycle/lets-parent-disposal-during-internal-plugin-await-the-unpublished-child-to-quiescence",
+      "origin": "harness",
+      "commit": "639ed015397290b3745d163aafe02ffee4aa3f84",
+      "source_file": "packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts",
+      "source_line": 237,
+      "source_title": "lets parent disposal during internal/plugin await the unpublished child to quiescence",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Pending-child structural drain and skipped setup are covered without publication; unpublished observer race remains future.",
+      "python_tests": [
+        "tests/compatibility/test_harness.py::test_parent_disposal_joins_pending_child_cleanup_without_running_setup"
+      ]
+    },
+    {
+      "id": "upstream/decorator/inject-on-class-method",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/decorator.spec.ts",
+      "source_line": 7,
+      "source_title": "@Inject on class method",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Plugin-wide metadata does not schedule methods; child method injection and shadow context rebinding remain future work.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/dispose/dispose-by-plugin",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 7,
+      "source_title": "dispose by plugin",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Immutable EffectMeta replaces JS records; plugin unload owns effects and cleanup runs once.",
+      "python_tests": [
+        "tests/test_effects.py::test_plugin_generator_cleanup_integrates_with_fiber"
+      ]
+    },
+    {
+      "id": "upstream/dispose/dispose-manually",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 23,
+      "source_title": "dispose manually",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Callable Effect preserves synchronous single-shot removal; immutable diagnostics replace JS lists.",
+      "python_tests": [
+        "tests/test_effects.py::test_sync_setup_and_cleanup_are_immediate_single_shot"
+      ]
+    },
+    {
+      "id": "upstream/dispose/yield-dispose",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 37,
+      "source_title": "yield dispose",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Nested owned listeners transfer into the effect tree and cleanup reverses 3,2,1.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_nested_effect_listener_tree_and_reverse_cleanup"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-return-1",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 76,
+      "source_title": "async return 1",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Awaitable setup and disposer are joined using asyncio rather than fake timers.",
+      "python_tests": [
+        "tests/test_effects.py::test_await_effect_settles_setup_without_disposing"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-return-2",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 90,
+      "source_title": "async return 2",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Disposal requested before async setup finishes joins returned cleanup; Events replace timer advancement.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_async_effect_disposal_before_setup_finishes_runs_returned_cleanup"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-yield-1",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 103,
+      "source_title": "async yield 1",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Async-generator collection is supported; exact three-yield timer sequence is not separately ported.",
+      "python_tests": [
+        "tests/test_effects.py::test_async_generator_stops_after_inflight_yield_and_closes"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-yield-2-aborted",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 123,
+      "source_title": "async yield 2 (aborted)",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "In-flight yield is retained then generator closes; exact first-yield timer boundary needs a dedicated port.",
+      "python_tests": [
+        "tests/test_effects.py::test_async_generator_stops_after_inflight_yield_and_closes"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-yield-3-aborted",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 143,
+      "source_title": "async yield 3 (aborted)",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "In-flight yielding stops at the epoch boundary; Python finalization differs from JS iterator return.",
+      "python_tests": [
+        "tests/test_effects.py::test_async_generator_plugin_epoch_loss_stops_at_checkpoint"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-yield-4-await-dispose",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 165,
+      "source_title": "async yield 4 (await dispose)",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Awaiting setup and cleanup are independently covered; exact full async-generator timer scenario remains a gap.",
+      "python_tests": [
+        "tests/test_effects.py::test_await_effect_settles_setup_without_disposing"
+      ]
+    },
+    {
+      "id": "upstream/dispose/return-with-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 185,
+      "source_title": "return with error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Synchronous setup error rolls back and detaches ownership.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_effect_setup_error_rolls_back_only_collected_resources"
+      ]
+    },
+    {
+      "id": "upstream/dispose/yield-with-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 197,
+      "source_title": "yield with error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Collected cleanup drains before synchronous setup error surfaces.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_effect_setup_error_rolls_back_only_collected_resources"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-return-with-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 210,
+      "source_title": "async return with error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Async setup errors are retained and rethrown after rollback.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_effect_setup_error_rolls_back_only_collected_resources"
+      ]
+    },
+    {
+      "id": "upstream/dispose/async-yield-with-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/dispose.spec.ts",
+      "source_line": 222,
+      "source_title": "async yield with error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Async yielded resource rollback is joined before rethrow; drain-all after cleanup failure is an intentional strengthening.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_effect_setup_error_rolls_back_only_collected_resources"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-on",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 18,
+      "source_title": "ctx.on()",
+      "classification": "identical semantic behavior",
+      "coverage": "ported",
+      "notes": "Repeated inline delivery and single removal match these assertions; this does not claim Promise or tracing parity.",
+      "python_tests": [
+        "tests/test_events.py::test_root_local_bus_views_and_manual_listener_removal"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-once",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 31,
+      "source_title": "ctx.once()",
+      "classification": "identical semantic behavior",
+      "coverage": "ported",
+      "notes": "One delivery and no-op removal match this ordinary case; recursive stale snapshots intentionally use a stronger Python guard.",
+      "python_tests": [
+        "tests/test_events.py::test_once_removes_before_recursive_invocation"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-parallel",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 44,
+      "source_title": "ctx.parallel()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit filter_ replaces thisArg; ExceptionGroup replaces AggregateError and all listeners settle.",
+      "python_tests": [
+        "tests/test_events.py::test_explicit_filter_and_global_option_for_every_dispatch",
+        "tests/test_events.py::test_parallel_groups_sync_async_errors_after_all_listeners_settle"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-emit",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 74,
+      "source_title": "ctx.emit()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit filter_ replaces thisArg; synchronous errors stop peers. Awaitable results are deliberately rejected.",
+      "python_tests": [
+        "tests/test_events.py::test_explicit_filter_and_global_option_for_every_dispatch",
+        "tests/test_events.py::test_emit_error_stops_following_listeners"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-serial",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 93,
+      "source_title": "ctx.serial()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit awaiting/filter_ adapts JS immediate async invocation; serial errors retain identity.",
+      "python_tests": [
+        "tests/test_events.py::test_explicit_filter_and_global_option_for_every_dispatch",
+        "tests/test_events.py::test_serial_failure_stops_peers_and_no_result_returns_none"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-bail",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 112,
+      "source_title": "ctx.bail()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit filter_ replaces thisArg; None/False use identity to preserve zero/empty bail results.",
+      "python_tests": [
+        "tests/test_events.py::test_explicit_filter_and_global_option_for_every_dispatch",
+        "tests/test_events.py::test_bail_error_propagates_and_no_result_returns_none"
+      ]
+    },
+    {
+      "id": "upstream/events/ctx-waterfall",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/events.spec.ts",
+      "source_line": 131,
+      "source_title": "ctx.waterfall()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Keyword next_ and string event replace positional terminal/Symbol; fixed arguments, sums and veto are retained.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_waterfall_fixed_arguments_and_veto_match_source_sequence"
+      ]
+    },
+    {
+      "id": "upstream/fiber/inertia-lock-1",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 7,
+      "source_title": "inertia lock 1",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Events replace fake timers; loading waits for setup, unload waits for cleanup, restoration reloads.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_loading_provider_removal_joins_consumer_cleanup",
+        "tests/test_services.py::test_unload_restore_during_slow_cleanup_keeps_old_snapshot_until_done"
+      ]
+    },
+    {
+      "id": "upstream/fiber/inertia-lock-2",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 27,
+      "source_title": "inertia lock 2",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Low-level restoration to the same epoch retains activation. Public replacement uses binding generations and intentionally reloads even with the same provider uid.",
+      "python_tests": [
+        "tests/test_fiber.py::test_return_to_same_epoch_during_loading_keeps_activation",
+        "tests/test_services.py::test_replacement_during_loading_uses_new_binding_generation"
+      ]
+    },
+    {
+      "id": "upstream/fiber/inertia-lock-3",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 43,
+      "source_title": "inertia lock 3",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Provider disposal joins the consumer transition; asyncio gates replace fake timers.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_loading_provider_removal_joins_consumer_cleanup"
+      ]
+    },
+    {
+      "id": "upstream/fiber/plugin-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 65,
+      "source_title": "plugin error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Failed listener is removed while successful shared-runtime peer remains; one Python error log substitutes for a replaced logger method.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_failed_mount_removes_its_listener_but_successful_peer_keeps_listener",
+        "tests/test_registry.py::test_failed_setup_retains_record_until_disposal_and_cleans_resources"
+      ]
+    },
+    {
+      "id": "upstream/fiber/dispose-error",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 87,
+      "source_title": "dispose error",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Contained cleanup errors do not reject disposal and remain inspectable.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_disposal_error_is_logged_once_and_does_not_reject"
+      ]
+    },
+    {
+      "id": "upstream/fiber/update-config-on-wrapped-fiber",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/fiber.spec.ts",
+      "source_line": 106,
+      "source_title": "update config on wrapped fiber",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Fiber.update and internal/update are not implemented; raw/resolved config and restart are not an update port.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/invoke/functional-service",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/invoke.spec.ts",
+      "source_line": 5,
+      "source_title": "functional service",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Native callability/explicit intercept resolution are covered; full test requires Service.extend and transparent retained-method tracing.",
+      "python_tests": [
+        "tests/test_service.py::test_callable_service_uses_native_call_and_keeps_instance_identity",
+        "tests/test_scope.py::test_service_resolves_explicit_or_active_caller_without_rebinding_owner"
+      ]
+    },
+    {
+      "id": "upstream/isolate/isolated-context",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/isolate.spec.ts",
+      "source_line": 7,
+      "source_title": "isolated context",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit get/require and ScopeLabel replace proxied properties/Symbol labels; independent activation/removal retained.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_isolated_provider_updates_only_matching_consumers"
+      ]
+    },
+    {
+      "id": "upstream/isolate/shared-label",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/isolate.spec.ts",
+      "source_line": 58,
+      "source_title": "shared label",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "ScopeLabel reuse joins views and removes both consumers without affecting the default slot.",
+      "python_tests": [
+        "tests/test_scope.py::test_shared_label_joins_views_and_removal_wakes_both"
+      ]
+    },
+    {
+      "id": "upstream/isolate/isolated-event",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/isolate.spec.ts",
+      "source_line": 104,
+      "source_title": "isolated event",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit service.matches_scope filter replaces automatic thisArg scope filtering; caller must supply the filter.",
+      "python_tests": [
+        "tests/test_scope.py::test_isolated_service_classes_and_scope_event_filter"
+      ]
+    },
+    {
+      "id": "upstream/logger/uses-fiber-name-when-called-from-outside-any-service",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 18,
+      "source_title": "uses fiber name when called from outside any service",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/logger/honours-explicit-name-argument",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 24,
+      "source_title": "honours explicit name argument",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/logger/honours-intercept-name",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 30,
+      "source_title": "honours intercept name",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/logger/uses-service-name-when-called-from-inside-a-service-method-regression",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 36,
+      "source_title": "uses service name when called from inside a Service method (regression)",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/logger/still-lets-outer-caller-intercept-override-the-service-derived-name",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 54,
+      "source_title": "still lets outer caller intercept override the service-derived name",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/logger/uses-service-name-when-called-from-inside-service-init-unchanged-behaviour",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/logger.spec.ts",
+      "source_line": 72,
+      "source_title": "uses service name when called from inside [Service.init] (unchanged behaviour)",
+      "classification": "future work",
+      "coverage": "none",
+      "notes": "Cordis LoggerService/exporter and traced naming are not implemented; Python failure logs do not substantiate this contract.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/plugin/apply-functional-plugin",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 8,
+      "source_title": "apply functional plugin",
+      "classification": "identical semantic behavior",
+      "coverage": "ported",
+      "notes": "One call receives the original config; executable representation differs without changing the asserted behavior.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_plugin_forms_pass_original_config_once"
+      ]
+    },
+    {
+      "id": "upstream/plugin/apply-object-plugin",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 18,
+      "source_title": "apply object plugin",
+      "classification": "identical semantic behavior",
+      "coverage": "ported",
+      "notes": "Object apply receives config once; the original callback remains registry identity.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_plugin_forms_pass_original_config_once"
+      ]
+    },
+    {
+      "id": "upstream/plugin/apply-invalid-plugin",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 29,
+      "source_title": "apply invalid plugin",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Python TypeError replaces JS invalid-plugin errors; invalid mounts leave no record.",
+      "python_tests": [
+        "tests/test_registry.py::test_invalid_plugin_is_rejected_without_mutation"
+      ]
+    },
+    {
+      "id": "upstream/plugin/inactive-context",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 36,
+      "source_title": "inactive context",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Explicit lifecycle error codes replace JS error text; plugin/effect/listener registration during unload is rejected.",
+      "python_tests": [
+        "tests/test_fiber.py::test_cleanup_cannot_register_more_cleanup_or_children",
+        "tests/test_events.py::test_unloading_and_disposed_owner_reject_registration"
+      ]
+    },
+    {
+      "id": "upstream/plugin/context-inspect",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 50,
+      "source_title": "context inspect",
+      "classification": "not applicable in Python",
+      "coverage": "none",
+      "notes": "Node util.inspect formatting has no Python API promise; runtime/fiber names are independently tested.",
+      "python_tests": []
+    },
+    {
+      "id": "upstream/plugin/ctx-registry",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 77,
+      "source_title": "ctx.registry",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Python iteration and immutable tuples replace JS forEach and collection APIs.",
+      "python_tests": [
+        "tests/test_registry.py::test_inspection_returns_stable_immutable_snapshots"
+      ]
+    },
+    {
+      "id": "upstream/plugin/nested-plugins",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 86,
+      "source_title": "nested plugins",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "String event replaces Symbol; three nested runtimes and four-to-one listener ownership assertions retained.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_nested_plugins_remove_only_owned_listeners"
+      ]
+    },
+    {
+      "id": "upstream/plugin/compare-snapshot",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 123,
+      "source_title": "compare snapshot",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Observable listeners/effect trees/registry are restored; private built-in kernel hook arrays are not emulated.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_remount_restores_owned_listener_effect_snapshot"
+      ]
+    },
+    {
+      "id": "upstream/plugin/root-dispose",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 145,
+      "source_title": "root dispose",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Root uid survives, child ownership drains once. Python effect diagnostics exclude structural child disposers unlike the JS private array.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_root_disposal_preserves_root_identity_and_drains_children_once"
+      ]
+    },
+    {
+      "id": "upstream/plugin/service-init",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/plugin.spec.ts",
+      "source_line": 165,
+      "source_title": "Service.init",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "start() replaces the initialization Symbol and returns the same owned cleanup algebra.",
+      "python_tests": [
+        "tests/test_registry.py::test_class_constructor_and_start_own_resources"
+      ]
+    },
+    {
+      "id": "upstream/reflect/context-is",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/reflect.spec.ts",
+      "source_line": 6,
+      "source_title": "Context.is()",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Native isinstance replaces the JS Context brand and preserves subclass identity.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_context_subclass_uses_native_type_identity"
+      ]
+    },
+    {
+      "id": "upstream/reflect/access-check",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/reflect.spec.ts",
+      "source_line": 12,
+      "source_title": "access check",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Explicit require/set enforce undeclared/nonowner access; inherited root-owned snapshots are allowed and arbitrary property proxy traps are not implemented.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_access_check_rejects_undeclared_reads_and_nonowner_writes",
+        "tests/test_services.py::test_get_escape_hatch_and_require_enforcement"
+      ]
+    },
+    {
+      "id": "upstream/reflect/service-injection",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/reflect.spec.ts",
+      "source_line": 30,
+      "source_title": "service injection",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Provide/set and metadata inheritance are covered; full test also requires mixin aliases and proxy warning behavior.",
+      "python_tests": [
+        "tests/test_services.py::test_set_is_owned_and_updates_snapshot_without_reloading",
+        "tests/test_context.py::test_extension_preserves_subclass_without_reinitializing_it"
+      ]
+    },
+    {
+      "id": "upstream/reflect/service-inject-leak",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/reflect.spec.ts",
+      "source_line": 57,
+      "source_title": "service inject leak",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Disposed require rejects access to the loaded snapshot; explicit API replaces ctx.foo.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_disposed_consumer_cannot_read_required_snapshot"
+      ]
+    },
+    {
+      "id": "upstream/service/pending-inject",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/service.spec.ts",
+      "source_line": 7,
+      "source_title": "pending inject",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "start() waits for a real event listener before dependent activation; replaces Service.init Symbol.",
+      "python_tests": [
+        "tests/compatibility/test_upstream.py::test_service_initialization_event_gates_dependent_activation"
+      ]
+    },
+    {
+      "id": "upstream/service/traceable-effect-with-inject",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/service.spec.ts",
+      "source_line": 36,
+      "source_title": "traceable effect (with inject)",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Ordinary defining-context methods are covered; source transparent method/property tracing and warning rules remain unimplemented.",
+      "python_tests": [
+        "tests/test_service.py::test_service_context_is_defining_owner_and_ordinary_methods_are_untraced"
+      ]
+    },
+    {
+      "id": "upstream/service/traceable-effect-without-inject",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/service.spec.ts",
+      "source_line": 76,
+      "source_title": "traceable effect (without inject)",
+      "classification": "future work",
+      "coverage": "partial",
+      "notes": "Ordinary defining-context methods are covered; source transparent method/property tracing and warning rules remain unimplemented.",
+      "python_tests": [
+        "tests/test_service.py::test_service_context_is_defining_owner_and_ordinary_methods_are_untraced"
+      ]
+    },
+    {
+      "id": "upstream/service/compare-snapshot",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/service.spec.ts",
+      "source_line": 109,
+      "source_title": "compare snapshot",
+      "classification": "Python-specific adaptation",
+      "coverage": "partial",
+      "notes": "Constructor-created dependent ownership drains/restores; private kernel hook snapshots are not emulated.",
+      "python_tests": [
+        "tests/test_service.py::test_service_start_creates_pending_child_consumer_then_parent_activates"
+      ]
+    },
+    {
+      "id": "upstream/service/multiple-injects",
+      "origin": "upstream",
+      "commit": "56b3d4f725681cf4556c1a8695a709cc3b6eed74",
+      "source_file": "packages/core/tests/service.spec.ts",
+      "source_line": 128,
+      "source_title": "multiple injects",
+      "classification": "Python-specific adaptation",
+      "coverage": "ported",
+      "notes": "Python declared dependencies and Service names/start replace JS Symbols while retaining chain activation/restoration.",
+      "python_tests": [
+        "tests/test_service.py::test_service_dependencies_chain_pending_loss_and_restoration"
+      ]
+    }
+  ]
+}

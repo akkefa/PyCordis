@@ -243,3 +243,12 @@ handle retains actual child Fibers. Preflight precedes mounting; setup/configura
 failure or cancellation drains the owner. Settlement revisits dependencies without
 waiting for absent providers. Discovery, nested config trees and HMR remain future.
 See [loader.md](loader.md) and [ADR 0012](adr/0012-deterministic-loader.md).
+
+## Phase 12 implementation
+
+The compatibility suite is independent of runtime implementation details. Pinned
+source titles map to behavioral ports or explicit gaps in a checked catalog.
+Current status is separated from historical phase evidence. New tests exercise
+plugin/event/resource ownership and Harness lifecycle barriers through public
+Context/Fiber APIs. No runtime changes are introduced. See compatibility.md and
+[ADR 0013](adr/0013-source-indexed-compatibility.md).

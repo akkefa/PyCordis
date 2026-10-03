@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Phase 12: 23 pinned-source behavioral compatibility cases and a catalog integrity
+  check; 72 classified source tests with commits, lines, fingerprints and Python
+  evidence. Current compatibility matrix replaces stale status with explicit gaps.
+- Historical phase evidence moved to compatibility-history.md; pinned decorator
+  source wording corrected. No runtime behavior changed and no full parity claim made.
+
 - Phase 11: separate deterministic Loader, PluginEntry records/config rows, explicit
   Python imports, batch ownership and actual Fiber inspection, preflight/rollback,
   dependency settlement and cancellation cleanup; 34 new cases, guide, ADR and example.

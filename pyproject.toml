@@ -28,6 +28,7 @@ packages = ["src/pycordis"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--strict-config --strict-markers"
+markers = ["compatibility: behavior derived from pinned Cordis/Harness sources"]
 asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope = "function"
 
