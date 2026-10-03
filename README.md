@@ -4,7 +4,8 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 1 Context foundation. Fiber, services, and plugin lifecycle are not implemented.**
+**Status: Phase 2 Context and low-level Fiber lifecycle. Services, full effects,
+events and plugin registry are not implemented.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -24,7 +25,9 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Fiber lifecycle. Read the
+The next reviewed increment is Effects. Read the
+[Fiber lifecycle guide](docs/lifecycle.md) and
+[Fiber ADR](docs/adr/0003-fiber-lifecycle.md). Read the
 [Context guide](docs/context.md) and [Context ADR](docs/adr/0002-context-foundation.md)
 before changing ownership behavior.
 
@@ -46,6 +49,11 @@ assert child.metadata["label"] == "worker"
 Metadata is a read-only mapping of shallow-copied entries. Values are shared
 by identity; they are not frozen. Context extensions inherit ownership without
 creating lifecycle work. Run `uv run python examples/basic_context.py`.
+Root construction now binds an ACTIVE root Fiber without creating a Task.
+
+For low-level mounted lifecycle setup and cleanup, see
+`uv run python examples/basic_fiber.py`. Direct Fiber construction requires a
+running event loop. Root Fiber disposal restarts; child disposal is terminal.
 
 ## References and attribution
 

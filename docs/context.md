@@ -1,4 +1,4 @@
-# Context foundation — Phase 1
+# Context foundation — Phases 1–2
 
 A Context is an explicit view of application scope. Constructing one is
 synchronous, has no side effects and requires no running event loop.
@@ -36,12 +36,13 @@ flowchart TD
 | metadata | Read-only Mapping[str, object], local entries over inherited entries |
 | extend(meta=None) | Distinct child; same root/owner; shallow-copied mapping entries |
 
-The `owner` context will be the scope where a future Fiber is bound. Phase 1
-roots own themselves and ordinary extensions inherit that identity. Parentage
+The `owner` context will be the scope where its Fiber is bound. Phase 2 adds ctx.fiber;
+roots own themselves and ordinary extensions inherit that identity. A mounted
+Fiber creates a context which owns itself and binds that Fiber. Parentage
 alone does not mean lifecycle ownership: extending a view never creates a new
 plugin instance, allocates a task or registers cleanup.
 
-No `get`, `provide`, `plugin`, `effect`, `dispose`, isolation or interception API
+No Context `get`, `provide`, `plugin`, `effect`, `dispose`, isolation or interception API
 exists yet. Metadata is not a service registry. Those contracts require their
 own phases and tests.
 
@@ -68,7 +69,7 @@ service lookup and its collision/injection rules remain deferred.
 Cordis creates prototype-inherited objects and copies own property descriptors.
 This Python implementation retains explicit parent links and read-only mapping
 views. It does not port JS descriptor/getter metadata, symbol keys, proxy-based
-service tracing, root built-in services or a root Fiber yet.
+service tracing, root built-in services yet. A loop-independent root Fiber is now implemented.
 
 extend preserves the Python class without rerunning its constructor. Class
 methods remain available, but arbitrary subclass instance attributes are not
@@ -90,5 +91,5 @@ work, not to metadata inheritance.
 The Context tests cover hierarchy, identity, copied entries, inherited and
 shadowed values, API immutability, invalid input, subclass behavior, and explicit
 scope across concurrent async tasks. No cleanup or disposal behavior is claimed.
-The next phase is the Fiber lifecycle state machine, reviewed against Harness
-reentrant disposal and dependency epoch semantics before implementing it.
+See [Fiber lifecycle](lifecycle.md) for Phase 2 ownership and teardown. Full
+effect/proxy tracing remains deferred.

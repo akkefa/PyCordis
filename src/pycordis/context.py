@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Iterator, Mapping
 from types import MappingProxyType
-from typing import Self
+from typing import TYPE_CHECKING, Self
+
+if TYPE_CHECKING:
+    from .fiber import Fiber
 
 
 class _Metadata(Mapping[str, object]):
@@ -39,13 +42,16 @@ class Context:
     their parent's root and owning context; they do not create lifecycle work.
     """
 
-    __slots__ = ("_metadata", "_owner", "_parent", "_root")
+    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_root")
 
     def __init__(self) -> None:
         self._parent: Context | None = None
         self._root: Context = self
         self._owner: Context = self
         self._metadata: Mapping[str, object] = MappingProxyType({})
+        from .fiber import Fiber
+
+        self._fiber = Fiber._create_root(self)
 
     @property
     def parent(self) -> Context | None:
@@ -65,6 +71,11 @@ class Context:
         where a future Fiber will be bound; it is not a Fiber or a disposer.
         """
         return self._owner
+
+    @property
+    def fiber(self) -> Fiber:
+        """Lifecycle owner shared by ordinary extensions."""
+        return self._fiber
 
     @property
     def metadata(self) -> Mapping[str, object]:
@@ -91,5 +102,6 @@ class Context:
         child._parent = self
         child._root = self.root
         child._owner = self.owner
+        child._fiber = self.fiber
         child._metadata = _Metadata(entries, self.metadata)
         return child
