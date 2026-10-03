@@ -2,6 +2,12 @@
 
 ## 0.1.0 — Unreleased
 
+- Phase 15: GitHub Actions checks for Python 3.11, 3.12 and 3.13; locked tools,
+  warnings-as-errors tests, lint/format/type checks, builds, distribution audits,
+  strict metadata validation and isolated wheel installation.
+- Expanded contribution guidance and GitHub readiness checklist. Source archives
+  now include CONTRIBUTING.md; runtime behavior and dependencies are unchanged.
+
 - Added opt-in packaging tools, strict metadata validation, and reproducible
   archive and clean-wheel installation checkers.
 

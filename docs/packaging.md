@@ -20,7 +20,7 @@ Links refer to the repository's `main` branch; they require these changes to lan
 The pure-Python wheel contains runtime modules, `py.typed`, metadata, and both
 `LICENSE` and `THIRD_PARTY_NOTICES.md`. The explicitly selected source archive also
 contains tests, documentation, examples, verification scripts, the lockfile and
-repository README. It excludes environments, caches and repository internals.
+repository README and contribution guidance. It excludes environments, caches and repository internals.
 Both targets explicitly use core metadata 2.4: the installed Twine 6.2 validator
 rejects the builder's current default 2.5. Version 2.4 retains the license
 expression and license-file fields used here.
@@ -71,7 +71,7 @@ service injection, event delivery and cleanup through installed public APIs.
 
 Phase 14 verification passed the 379-test suite on Python 3.11.15 and clean wheel
 installation checks on Python 3.11.15, 3.12.13 and 3.13.13. These installation
-checks are smoke checks; a full multi-version CI matrix belongs to Phase 15.
+checks are smoke checks; Phase 15 adds a full multi-version CI matrix.
 
 ## Publication boundary
 

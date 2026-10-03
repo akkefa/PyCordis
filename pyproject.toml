@@ -51,6 +51,7 @@ include = [
   "/README.md",
   "/README.pypi.md",
   "/CHANGELOG.md",
+  "/CONTRIBUTING.md",
   "/LICENSE",
   "/THIRD_PARTY_NOTICES.md",
 ]

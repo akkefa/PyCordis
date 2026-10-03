@@ -14,8 +14,10 @@ where object proxies, Symbols or JavaScript execution semantics do not transfer.
 
 **Status: version `0.1.0` prepared as an alpha API; compatibility remains partial.**
 The distribution name is provisional and no release has been published in this
-project work. Phase 14 prepares and verifies package artifacts. The next phase is
-GitHub Readiness; publication requires a separate explicit user request. See the [current compatibility matrix](docs/compatibility.md).
+project work. Phase 15 adds contribution guidance and a Python 3.11–3.13 CI
+workflow. Publication requires a separate explicit user request. See the
+[current compatibility matrix](docs/compatibility.md) and
+[GitHub readiness checklist](docs/github-readiness.md).
 
 ## Installation from a checkout
 
@@ -395,6 +397,7 @@ Start with [the mental model](docs/mental-model.md) and
 [events](docs/events.md), [scope](docs/scope.md), [metadata](docs/metadata.md),
 [validation](docs/config.md) and [loader](docs/loader.md).
 For package installation and artifact checks, read [packaging](docs/packaging.md).
+For development setup, checks and pull requests, read [CONTRIBUTING](CONTRIBUTING.md).
 For design work, read [architecture](docs/architecture.md),
 [the source audit](docs/phase-0.md) and [decisions](docs/adr/0001-phase-0-foundation.md).
 

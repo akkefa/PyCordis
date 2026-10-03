@@ -118,6 +118,7 @@ def check_distributions(wheel: Path, sdist: Path, root: Path) -> dict[str, objec
             "README.md",
             "README.pypi.md",
             "CHANGELOG.md",
+            "CONTRIBUTING.md",
             "LICENSE",
             "THIRD_PARTY_NOTICES.md",
         ]:

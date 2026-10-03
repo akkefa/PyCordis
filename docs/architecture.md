@@ -271,3 +271,13 @@ archive includes development and documentation inputs. Standard-library archive
 and isolated-install checkers supplement strict Twine validation. Packaging tools
 are an opt-in dependency group; the runtime remains dependency-free. See
 [packaging.md](packaging.md) and [ADR 0015](adr/0015-package-readiness.md).
+
+## Phase 15 GitHub readiness
+
+A single GitHub Actions matrix covers Python 3.11–3.13 with locked development
+and packaging tools, full tests, static checks, builds, archive validation and
+isolated wheel checks. Contribution guidance describes source-backed behavior
+changes and matching local verification. Source archives now include that guide.
+Runtime APIs and dependencies are unchanged; publication remains a separate
+request. See [github-readiness.md](github-readiness.md) and
+[ADR 0016](adr/0016-github-readiness.md).
