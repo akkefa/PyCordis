@@ -12,10 +12,10 @@ runtime used by DeepSeek Harness at commit
 not the Harness application or its LLM integrations. Python APIs adapt the source
 where object proxies, Symbols or JavaScript execution semantics do not transfer.
 
-**Status: Phase 13 documentation and examples. Compatibility is partial.**
-The internal version is `0.0.0`; the package name is provisional and nothing has
-been published. The next phase is PyPI Packaging preparation, with publication
-requiring a separate user request. See the [current compatibility matrix](docs/compatibility.md).
+**Status: version `0.1.0` prepared as an alpha API; compatibility remains partial.**
+The distribution name is provisional and no release has been published in this
+project work. Phase 14 prepares and verifies package artifacts. The next phase is
+GitHub Readiness; publication requires a separate explicit user request. See the [current compatibility matrix](docs/compatibility.md).
 
 ## Installation from a checkout
 
@@ -394,6 +394,7 @@ Start with [the mental model](docs/mental-model.md) and
 [effects](docs/effects.md), [services](docs/services.md), [Service classes](docs/service.md),
 [events](docs/events.md), [scope](docs/scope.md), [metadata](docs/metadata.md),
 [validation](docs/config.md) and [loader](docs/loader.md).
+For package installation and artifact checks, read [packaging](docs/packaging.md).
 For design work, read [architecture](docs/architecture.md),
 [the source audit](docs/phase-0.md) and [decisions](docs/adr/0001-phase-0-foundation.md).
 
@@ -402,8 +403,9 @@ uv run pytest -W error
 uv run pytest -m compatibility
 uv run ruff check .
 uv run ruff format --check .
-uv run mypy src tests examples
+uv run mypy src tests examples scripts
 uv build
+uv run python scripts/check_distribution.py dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
 ```
 
 All 16 standalone examples in [examples/README.md](examples/README.md) run from the

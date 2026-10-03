@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 — Unreleased
+
+- Added opt-in packaging tools, strict metadata validation, and reproducible
+  archive and clean-wheel installation checkers.
+
+- Phase 14: alpha package metadata/version, project URLs, package-index README,
+  explicit source archive contents, distribution integrity checks and clean wheel
+  installation verification. Zero runtime dependencies and no implemented extras.
+- Package artifacts are prepared locally; nothing is uploaded or published.
 
 - Phase 13: README ownership-first walkthrough, checkout installation, services,
   dependency/reactive lifecycle, effects, events, waterfall and lifecycle diagram.

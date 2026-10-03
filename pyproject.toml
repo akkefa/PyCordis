@@ -1,15 +1,15 @@
 [project]
 name = "pycordis"
-version = "0.0.0"
+version = "0.1.0"
 description = "Python plugin runtime targeting DeepSeek Harness vendored Cordis semantics"
-readme = "README.md"
+readme = "README.pypi.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 authors = [{name = "Ikram Ali"}]
 dependencies = []
 classifiers = [
-  "Development Status :: 1 - Planning",
+  "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.11",
@@ -18,12 +18,43 @@ classifiers = [
   "Typing :: Typed",
 ]
 
+[project.optional-dependencies]
+# No optional adapters are implemented; development tools are dependency groups.
+
+[project.urls]
+Homepage = "https://github.com/akkefa/PyCordis"
+Repository = "https://github.com/akkefa/PyCordis"
+Issues = "https://github.com/akkefa/PyCordis/issues"
+Documentation = "https://github.com/akkefa/PyCordis/tree/main/docs"
+Changelog = "https://github.com/akkefa/PyCordis/blob/main/CHANGELOG.md"
+
 [build-system]
 requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
+# Twine 6.2 validates through core metadata 2.4; retain PEP 639 license fields.
+core-metadata-version = "2.4"
 packages = ["src/pycordis"]
+
+[tool.hatch.build.targets.sdist]
+core-metadata-version = "2.4"
+include = [
+  "/.gitignore",
+  "/src",
+  "/tests",
+  "/docs",
+  "/examples",
+  "/scripts",
+  "/pyproject.toml",
+  "/uv.lock",
+  "/README.md",
+  "/README.pypi.md",
+  "/CHANGELOG.md",
+  "/LICENSE",
+  "/THIRD_PARTY_NOTICES.md",
+]
+exclude = ["**/__pycache__", "**/*.pyc", "**/.pytest_cache", "**/.mypy_cache", "**/.ruff_cache"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -45,6 +76,8 @@ strict = true
 files = ["src", "tests"]
 
 [dependency-groups]
+# Opt-in tools for checking metadata and the package-index long description.
+packaging = ["twine>=6.2,<7"]
 dev = [
     "mypy>=2.4.0",
     "pytest>=9.1.1",

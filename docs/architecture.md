@@ -261,3 +261,13 @@ explains views versus owners, activation windows and caller configuration.
 examples/README.md provides a learning path across 16 independent entry points.
 Current API guides no longer describe implemented features as future phases.
 Package publication remains separate from documentation work.
+
+## Phase 14 packaging
+
+The first alpha distribution is version 0.1.0. Metadata and an index-specific
+README describe the implemented API and partial compatibility. The wheel ships
+only runtime modules, typing metadata and license notices; the selected source
+archive includes development and documentation inputs. Standard-library archive
+and isolated-install checkers supplement strict Twine validation. Packaging tools
+are an opt-in dependency group; the runtime remains dependency-free. See
+[packaging.md](packaging.md) and [ADR 0015](adr/0015-package-readiness.md).
