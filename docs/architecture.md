@@ -1,0 +1,128 @@
+# Architecture proposal — Phase 0
+
+These modules are proposed, not implemented. The TypeScript source separates
+Context, RegistryService, Fiber, ReflectService, EventsService, Service,
+LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
+
+```mermaid
+flowchart TD
+    C[Context: API and scoped view] --> R[Registry: normalized plugin identity]
+    R --> F[Fiber: mounted plugin and lifecycle]
+    F --> E[Effects: resources and cleanup]
+    C --> S[Reflect: scoped service bindings]
+    S --> D[Dependency checks and provider identity]
+    D --> F
+    C --> B[Events: dispatch and interception]
+    F --> K[Child Context and parent-owned child Fiber]
+```
+
+| TypeScript source | Responsibility | Proposed Python target |
+|---|---|---|
+| context.ts / Context | Root API; child metadata; isolate/intercept views | context.py / Context |
+| fiber.ts / Fiber, FiberState | Per-mount lifecycle; dependency epochs; config; ownership | fiber.py / Fiber, FiberState |
+| fiber.ts / effect, _execute | Reversible setup; generator effects; joined cleanup | effects.py if extraction simplifies fiber.py |
+| registry.ts / RegistryService, Plugin.Runtime | Normalize plugin forms; callback identity; live fibers | registry.py / Registry, PluginRuntime |
+| registry.ts / Inject.resolve | Normalize dependency declarations | metadata.py / dependency normalization, later |
+| reflect.ts / ReflectService, Impl | Service slots, availability, access checks, notify, proxy hooks | reflect.py / ServiceRegistry and binding records |
+| service.ts / Service | Named self-registering service; traced context; intercept config | service.py / Service |
+| events.ts / EventsService | on/once; emit/parallel/serial/bail/waterfall; filters | events.py / Events |
+| context.ts + reflect.ts + utils.ts | Scope labels, shadow/use context, interception | context.py initially; scope.py only if justified |
+| logger.ts / LoggerService | Owned exporters; diagnostic logging | logging adapter to evaluate later |
+| utils.ts / DisposableList, symbols, tracing | Ordered ownership lists, sentinels, proxy tracing | private helpers; contextvars for execution ownership |
+| fiber.ts / CordisError, ValidationError | Stable error code and configuration failures | errors.py |
+| loader package (separate) | Config tree and deterministic loading, eventually HMR | separate loader module/package after kernel |
+
+## Execution flow
+
+1. Context construction installs a root Fiber and built-in services. Root uid
+   is 0 and state is ACTIVE. Bootstrap-created disposers are cleared.
+2. Registry normalizes a function, constructor, or object apply method and
+   shares a runtime record by executable callback identity. Every mount gets a
+   fresh Fiber; registration is not a singleton-per-plugin operation.
+3. Harness registers the child and assigns its parent-owned disposer BEFORE
+   publishing internal/plugin. That observer can add required injections.
+4. Available dependencies form an epoch containing provider Fiber uids.
+   Missing requirements leave the plugin PENDING. Awaiting the Fiber settles
+   current lifecycle work; it does not wait indefinitely for future providers.
+5. Loading snapshots dependency bindings. After a microtask checkpoint, the
+   Harness checks for a stale epoch, resolves raw config through internal/config,
+   validates it synchronously, then invokes the plugin via its effect runner.
+6. Dependency loss or identity change drives unload and optional reload.
+   Service removal notifies matching consumers and waits for their transitions
+   before deleting the provider's own snapshot entry, permitting cleanup access.
+7. Parent disposal owns child cleanup even before child activation. Setup and
+   in-flight teardown must finish before structural owners report completion.
+
+## Effects and cleanup
+
+Setup may return a disposer, promise of a disposer, iterable, or async iterable
+of disposers. _execute consumes synchronous iterators immediately and checks
+the epoch before advancing async iterators. The effect runner supplies the
+execution context and collects yielded resources.
+
+DisposableList.clear reverses registration order. Fiber._unload maps that
+snapshot into Promise.all: top-level cleanup starts in reverse order but runs
+concurrently, so completion is NOT globally LIFO. An individual effect chains
+its collected disposers in reverse order. A failure inside that chain can stop
+later entries; top-level teardown catches/logs each effect failure. Do not claim
+all nested cleanups survive exceptions without explicit tests and a documented
+policy decision. The original Python request's stronger cleanup goal may need
+an intentional deviation here.
+
+Harness makes an effect owner-visible before setup, retains async teardown
+visibility until completion, joins already-running cleanup internally, rejects
+new effects during UNLOADING, and allows PENDING/LOADING effects.
+
+## Services, access, and scope
+
+Reflect owns a root-wide store indexed by isolation labels. Duplicate providers
+in one slot throw; replacement means removal followed by registration. A value
+mutation through set belongs to its owning Fiber and does not itself notify
+reactive consumers. Strict get checks that the provider Fiber is ACTIVE.
+
+Attribute lookup is a different path: plugin contexts enforce injection and
+walk compatible ancestor Fiber snapshots; root attribute reads are non-strict.
+An explicit Python get API must choose whether to preserve the original get
+escape hatch or enforce declared injection consistently. Do not conflate these.
+
+extend inherits metadata and ownership without creating a new Fiber. isolate
+creates or joins a per-service label; it is not simply a private child dict.
+intercept contributes service config merged ancestor-first. Service methods are
+traceable: caller scope and defining ownership both matter. contextvars can
+track Python execution but alone does not reproduce the complete proxy behavior.
+Events filter when an explicit dispatch object supplies a context filter;
+ordinary child dispatch is not automatically isolated.
+
+## Events
+
+| Mode | Inspected Harness behavior |
+|---|---|
+| emit | Calls listeners synchronously, ignores returns; synchronous throw stops dispatch |
+| parallel | Runs all, waits for allSettled, aggregates errors; dispatch telemetry reports emit |
+| serial | Awaits in order and stops at first bail result |
+| bail | Synchronous first bail result |
+| waterfall | Shared zero-argument next continuation; omission vetoes remaining chain |
+
+Bail excludes only null, false, undefined: 0 and empty string DO bail.
+In Python, use identity checks for None/False; truthiness would be incompatible.
+The request's illustrative next_(request) is not the inspected continuation
+contract: listener arguments stay fixed and next takes no replacement request.
+Async emit requires an explicit Python policy because calling async def only
+creates a coroutine, unlike JavaScript async functions which begin execution.
+
+## Choices to review before runtime coding
+
+- Start with explicit get/provide; defer optional attribute lookup and define
+  collisions and injection enforcement in the Phase 1/service ADR.
+- Keep Context construction synchronous; decide loop binding and mounting
+  semantics before Fiber. Preserve eager sync plugin/effect execution where
+  relevant rather than assuming asyncio.create_task reproduces JavaScript.
+- Use an awaited lifecycle-settlement method, potentially Fiber.__await__, that
+  settles current work and exposes setup failure even for a PENDING plugin.
+- Decide terminal ctx.dispose separately from restartable root fiber.dispose.
+- Keep reverse-start concurrent owner cleanup versus nested sequential cleanup
+  explicit; choose exception/cancellation/reentrant-await behavior with tests.
+- Preserve Harness behavior first; consider current upstream fixes individually,
+  including waterfall guards, failure latch and wrapper identity corrections.
+- Version/name and build choices are provisional; no new runtime dependency,
+  repository URL, or public 0.1.0 API is invented during bootstrap.
