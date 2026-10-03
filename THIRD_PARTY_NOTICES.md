@@ -1,9 +1,11 @@
 # Third-party notices
 
-Phase 0 contains original Python scaffold code and source-analysis documentation.
-No TypeScript runtime source has been copied into the Python package. The
-following full MIT notices are retained for the behavioral reference works and
-future adaptations. Preserve applicable notices with any directly adapted code.
+PyCordis contains original Python runtime code, behavioral test adaptations and
+source-analysis documentation. No TypeScript runtime source has been copied into
+the Python package. The full MIT notices below are retained for the behavioral
+reference works. Source commits and test provenance are recorded in
+[the compatibility catalog](docs/compatibility-cases.md). Preserve applicable
+notices with any directly adapted code.
 
 ## Cordis — Shigma
 

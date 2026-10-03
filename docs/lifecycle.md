@@ -1,7 +1,8 @@
-# Fiber lifecycle — Phases 2–3
+# Fiber lifecycle
 
-These phases provide low-level mounted Fibers and reversible effects, without
-Registry or services. See the [effect engine](effects.md). The reference remains Harness
+Fibers own plugin setup, reversible effects and nested mounts. Context.plugin
+is the normal mounting API; direct Fiber construction remains a low-level option.
+See the [effect engine](effects.md). The reference remains Harness
 639ed015397290b3745d163aafe02ffee4aa3f84, fiber.ts and its local lifecycle patches.
 
 ```python
@@ -45,12 +46,11 @@ asyncio.run(main())
 | fiber.dispose() | Immediately request disposal; returned awaitable joins teardown |
 | fiber.add_cleanup(callback) | Minimal owned callback registration; no manual disposer returned |
 
-Setup may be sync/async and return None or one sync/async cleanup callable.
-Phase 3 also accepts generator and composed effect results. Setup is now
-registered as a labeled effect and uses the shared effect runner.
-Child Fiber construction is a lower-level Phase 2 entrypoint; the registry will
-later provide plugin normalization and ctx.plugin. No builtin services/events or
-internal/plugin/status notifications exist yet.
+Setup may be sync/async and return None, cleanup callbacks, generators or
+composed effect results. It is registered as a labeled effect and uses the shared
+effect runner. Registry mounts normalize plugin forms and activate from required
+service bindings. Direct Fiber construction has no plugin declaration/validator.
+Internal/plugin/status publication notifications remain unimplemented.
 
 ## Transitions
 

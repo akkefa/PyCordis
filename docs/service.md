@@ -70,9 +70,10 @@ proxy logic. A constructor's returned instance is never treated as a cleanup
 callback, including when it is callable.
 
 Service is a convenience base, not an abstract resource manager: there is no
-implicit close/stop/destructor hook. Owned effects supply cleanup. Caller-context tracing, prototype extension helpers, decorators and attribute
-service lookup remain later work. Phase 8 adds explicit label isolation,
-matches_scope, and resolve_config; see scope.md. The defining context remains
+implicit close/stop/destructor hook. Owned effects supply cleanup. Caller-context
+tracing, prototype extension helpers, automatic method injection and attribute
+service lookup remain future work. Explicit scope support includes label isolation,
+matches_scope and resolve_config; see [scope](scope.md). The defining context remains
 unchanged when resolving caller configuration. See services.md for reactive teardown.
 
 ## Metadata declarations (Phase 9)

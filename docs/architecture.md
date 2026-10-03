@@ -252,3 +252,12 @@ Current status is separated from historical phase evidence. New tests exercise
 plugin/event/resource ownership and Harness lifecycle barriers through public
 Context/Fiber APIs. No runtime changes are introduced. See compatibility.md and
 [ADR 0013](adr/0013-source-indexed-compatibility.md).
+
+## Phase 13 documentation
+
+README.md introduces ownership before API details and includes complete runnable
+examples for plugin, Service, dependency, effect and event flows. mental-model.md
+explains views versus owners, activation windows and caller configuration.
+examples/README.md provides a learning path across 16 independent entry points.
+Current API guides no longer describe implemented features as future phases.
+Package publication remains separate from documentation work.

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Phase 13: README ownership-first walkthrough, checkout installation, services,
+  dependency/reactive lifecycle, effects, events, waterfall and lifecycle diagram.
+- Mental-model guide, ordered index for 16 runnable examples, five beginner examples,
+  current guide wording and attribution; no runtime behavior changes.
+
 - Phase 12: 23 pinned-source behavioral compatibility cases and a catalog integrity
   check; 72 classified source tests with commits, lines, fingerprints and Python
   evidence. Current compatibility matrix replaces stale status with explicit gaps.

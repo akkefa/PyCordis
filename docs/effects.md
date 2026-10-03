@@ -1,4 +1,4 @@
-# Reversible effects — Phase 3
+# Reversible effects
 
 An effect registers resource setup and cleanup with the Context's Fiber.
 Registration precedes setup, so a reentrant owner unload cannot miss it.
@@ -120,12 +120,12 @@ Tasks are not automatically owned; register an explicit cleanup for them.
 
 ## Test evidence
 
-29 new effect cases plus 55 prior cases pass on Python 3.11.15. They cover
-sync/async setup and cleanup, manual/automatic disposal, single-shot behavior,
+The effect tests cover sync/async setup and cleanup, manual/automatic disposal, single-shot behavior,
 collection order, nested ownership and metadata, sync/async rollback, invalid
 results, in-flight owner/outer joins, generator abortion/finalization, plugin
 generator setup, pending/loading registration, cleanup-time rejection, waiter
 cancellation, explicit ownership, cross-owner rejection, reentrancy, cleanup
 error drainage and no remaining effect Tasks in the tested complete drain.
-No TypeScript suite execution or service/event/registry integration is claimed.
-The next phase is Registry and plugin mounting.
+Later registry, service, event and compatibility tests exercise integration with
+this effect engine. No TypeScript suite was run; [compatibility](compatibility.md)
+contains the current source-indexed evidence and intentional differences.

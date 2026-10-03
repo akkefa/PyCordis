@@ -74,10 +74,10 @@ Cordis's provider-uid epochs: a same-owner replacement during async startup must
 invalidate the old snapshot. Structural ancestors/current execution owners are
 excluded from removal's dependency joins because they already own the cleanup;
 joining them would wait for that same removal. Declared dependency cycles with
-no available seed bindings remain pending; this phase does not solve cycles.
+no available seed bindings remain pending; the runtime does not solve cycles automatically.
 
-The Service base class is implemented in Phase 6; see [Service classes](service.md).
-Scope/intercept configuration is implemented in Phase 8; see scope.md.
+See [Service classes](service.md) for the convenience base and [scope](scope.md)
+for isolation/intercept configuration.
 Attribute service lookup, accessors/mixins, traceable methods and internal events remain
 future work. Root Fiber disposal restarts its lifecycle; it is not terminal
 Context shutdown. Loop-bound service mutations cannot move to another loop.

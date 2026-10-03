@@ -1,7 +1,8 @@
-# Context foundation — Phases 1–2
+# Context views and ownership
 
 A Context is an explicit view of application scope. Constructing one is
-synchronous, has no side effects and requires no running event loop.
+synchronous and requires no running event loop. It initializes root-local runtime
+stores and an ACTIVE root Fiber without scheduling a Task.
 
 ```python
 from pycordis import Context
@@ -36,16 +37,17 @@ flowchart TD
 | metadata | Read-only Mapping[str, object], local entries over inherited entries |
 | extend(meta=None) | Distinct child; same root/owner; shallow-copied mapping entries |
 
-The `owner` context will be the scope where its Fiber is bound. Phase 2 adds ctx.fiber;
+The `owner` context is the scope where its Fiber is bound; ctx.fiber exposes it.
 roots own themselves and ordinary extensions inherit that identity. A mounted
 Fiber creates a context which owns itself and binds that Fiber. Parentage
 alone does not mean lifecycle ownership: extending a view never creates a new
 plugin instance, allocates a task or registers cleanup.
 
-Context.effect now registers reversible setup with ctx.fiber. See effects.md.
-No Context `get`, `provide`, `plugin`, `dispose`, isolation or interception API
-exists yet. Metadata is not a service registry. Those contracts require their
-own phases and tests.
+Context.effect registers reversible setup with ctx.fiber. Context also exposes
+plugin mounting, explicit service access, events, isolate and intercept. Metadata
+is separate from the service registry. See [the mental model](mental-model.md)
+and [services](services.md). There is no terminal Context.dispose API; root Fiber
+disposal uses restart semantics.
 
 ## Inheritance and collisions
 
@@ -61,16 +63,16 @@ replacement of ownership properties or APIs. Missing keys raise KeyError;
 normal Mapping.get can be used for optional metadata. Non-mapping input or
 non-string keys raises TypeError before a child is created.
 
-The metadata namespace is deliberately separate from future service access.
-Prefer explicit service get/provide when the service phase arrives; attribute
-service lookup and its collision/injection rules remain deferred.
+The metadata namespace is separate from explicit service get/provide/require.
+Attribute service lookup and its proxy collision/injection rules remain deferred.
 
 ## Python and TypeScript differences
 
 Cordis creates prototype-inherited objects and copies own property descriptors.
 This Python implementation retains explicit parent links and read-only mapping
 views. It does not port JS descriptor/getter metadata, symbol keys, proxy-based
-service tracing, root built-in services yet. A loop-independent root Fiber is now implemented.
+service tracing or Cordis built-in services such as LoggerService. Registry,
+service-slot and event stores are native Python implementations.
 
 extend preserves the Python class without rerunning its constructor. Class
 methods remain available, but arbitrary subclass instance attributes are not
@@ -80,22 +82,22 @@ supported extension contract. Root subclasses must call super().__init__().
 
 ## Concurrency
 
-There is no global current Context and no implicit task-local ownership yet.
-Pass the context explicitly between coroutines. Independent roots and sibling
-views remain separate across awaits. Shared mutable values still require the
-caller's synchronization policy. This is not a thread-safety guarantee for
-resources carried in metadata. contextvars belongs to later execution ownership
-work, not to metadata inheritance.
+Pass resource ownership explicitly through a Context. Context.scope and
+current_context provide task-local caller views for operations; setup/cleanup and
+event dispatch activate the appropriate views. They do not transfer Fiber ownership.
+Independent roots and sibling views retain their metadata identities across awaits.
+Shared mutable values still require caller synchronization; metadata views do not
+guarantee thread safety. See [scope](scope.md).
 
-## Verification and next step
+## Verification
 
 The Context tests cover hierarchy, identity, copied entries, inherited and
 shadowed values, API immutability, invalid input, subclass behavior, and explicit
-scope across concurrent async tasks. No cleanup or disposal behavior is claimed.
-See [Fiber lifecycle](lifecycle.md) for Phase 2 ownership and teardown. Full
-effect/proxy tracing remains deferred.
+scope across concurrent async tasks. Lifecycle, effect and scope tests verify
+their separate ownership contracts. See [Fiber lifecycle](lifecycle.md) and
+[compatibility](compatibility.md) for current evidence and deferred proxy tracing.
 
-## Scoped views (Phase 8)
+## Scoped views
 
 isolate(name, label=None) and intercept(name, config) create ordinary child views
 with the same Fiber ownership. They copy isolation entries or append immutable
