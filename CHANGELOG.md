@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Phase 11: separate deterministic Loader, PluginEntry records/config rows, explicit
+  Python imports, batch ownership and actual Fiber inspection, preflight/rollback,
+  dependency settlement and cancellation cleanup; 34 new cases, guide, ADR and example.
+- Discovery, file formats, nested configuration groups, expressions/update hooks
+  and HMR remain deferred. No runtime dependencies added.
+
 - Phase 10: synchronous ConfigValidator protocol, structured ValidationIssue /
   ValidationError, raw and resolved Fiber config, validation before each valid
   activation, failure cleanup/restart recovery, 27 new cases, guide, ADR and example.

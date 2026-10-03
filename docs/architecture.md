@@ -1,7 +1,7 @@
 # Architecture and phase status
 
-Phase 10 adds synchronous configuration validation; loader integration and tracing
-remain future work. The phase history below describes earlier increments.
+Phase 11 adds a separate deterministic loader over synchronous configuration
+validation; advanced loader integration and tracing remain future work. The phase history below describes earlier increments.
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
 Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
@@ -38,7 +38,7 @@ flowchart TD
 | logger.ts / LoggerService | Owned exporters; diagnostic logging | logging adapter to evaluate later |
 | utils.ts / DisposableList, symbols, tracing | Ordered ownership lists, sentinels, proxy tracing | private helpers; contextvars for execution ownership |
 | fiber.ts / CordisError, ValidationError | Stable error code and configuration failures | errors.py |
-| loader package (separate) | Config tree and deterministic loading, eventually HMR | separate loader module/package after kernel |
+| loader package (separate) | Config tree and deterministic loading, eventually HMR | loader.py / explicit batches; advanced config tree/HMR future |
 
 ## Execution flow
 
@@ -234,3 +234,12 @@ the loading checkpoint under the injected-service snapshot. raw_config preserves
 input, config exposes the last successful resolution. ValidationIssue/Error provide
 structured optional diagnostics. Failed validation uses existing rollback and
 restart semantics. Loader/config waterfalls and update APIs remain future work.
+
+## Phase 11 implementation
+
+loader.py provides explicit module/attribute resolution, typed entries and strict
+configuration rows. Each input-order batch has a structural owner Fiber, and the
+handle retains actual child Fibers. Preflight precedes mounting; setup/configuration
+failure or cancellation drains the owner. Settlement revisits dependencies without
+waiting for absent providers. Discovery, nested config trees and HMR remain future.
+See [loader.md](loader.md) and [ADR 0012](adr/0012-deterministic-loader.md).

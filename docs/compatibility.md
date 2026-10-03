@@ -1,6 +1,6 @@
 # Compatibility status
 
-Phase 10 implements synchronous configuration validation, explicit plugin metadata plus Context/Fiber/effects, registry, scoped reactive services,
+Phase 11 implements explicit deterministic loading, synchronous configuration validation, explicit plugin metadata plus Context/Fiber/effects, registry, scoped reactive services,
 Service classes, events and explicit intercept config/caller scopes. Kernel event
 hooks, automatic method injection, loader config resolution and proxy tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
@@ -21,7 +21,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
 | Decorators/metadata | Python adaptation | Immutable explicit records and identity-preserving plugin decorators; automatic method injection future |
 | Config validation/lazy resolution | Python validation adaptation; lazy loader resolution future | Synchronous protocol, defaults/transforms, reload/failure handling; internal/config and update hooks deferred |
-| Loader/volatile config | Future | Separate loader; documented Harness patches |
+| Loader/volatile config | Explicit ordered Python loader; advanced features future | Real Fiber ownership, preflight/rollback; volatile config, nested groups and HMR deferred |
 | JS cross-realm Symbol brand, Proxy machinery | Not mechanically portable | Behavioral equivalents where needed; JS-specific representation inapplicable |
 
 ## Test adaptation plan
@@ -343,3 +343,18 @@ brand is emulated. Per-mount validators follow Phase 9 rather than the source
 shared runtime Config. No TypeScript suite or full Harness boot was executed.
 Internal/config expressions, internal/update, Fiber.update and schema library
 adapters remain future work.
+
+## Phase 11 evidence
+
+Thirty-four new cases in tests/test_loader.py adapt explicit source EntryOptions,
+Entry._init import/mount and actual-Fiber retention, plus group ownership from the
+pinned Harness loader. They test Python imports/cache/reference validation, mapping
+rows/disabled/duplicate entries, ordered mounting, independent batches, provider
+chains, missing services, failure rollback, owned listeners/children/resources,
+cancellation joins and parent-scoped disposal. The Python suite totals 355 cases.
+
+All cases are Python-specific adaptations. Atomic batch rollback strengthens source
+import-failure logging. A structural owner provides grouping without serialized
+nested tree behavior. Module side effects remain outside rollback. No TypeScript
+suite or Harness boot was executed. Discovery/entry points, includes, expression
+resolution, update/persistence, volatile config and hot reload remain future work.

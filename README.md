@@ -4,9 +4,9 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 10 adds synchronous configuration validation to Context, Fiber
-lifecycle, effects, registry, scoped services, events and explicit plugin metadata.
-Loader integration, method tracing and kernel event hooks remain future work.**
+**Status: Phase 11 adds an explicit deterministic loader over Context, Fiber
+lifecycle, effects, registry, scoped services, events, metadata and validation.
+Loader expressions/HMR, method tracing and kernel event hooks remain future work.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -26,7 +26,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Loader, after reviewing kernel stability. Read the
+The next reviewed increment is the Compatibility Suite. Read the
+[Loader guide](docs/loader.md) and [Loader ADR](docs/adr/0012-deterministic-loader.md). Read the
 [Configuration guide](docs/config.md) and [Validation ADR](docs/adr/0011-config-validation.md). Read the
 [Metadata guide](docs/metadata.md) and [Metadata ADR](docs/adr/0010-plugin-metadata.md). Read the
 [Scope guide](docs/scope.md) and [Scope ADR](docs/adr/0009-scoped-services.md). Read the
@@ -147,3 +148,10 @@ validate method supplies defaults or transforms input before activation.
 ValidationError supports structured field diagnostics. Fiber.raw_config preserves
 input for reloads; Fiber.config exposes the resolved value.
 Run `uv run python examples/config_validation.py`.
+
+## Deterministic loader
+
+Import Loader and PluginEntry from pycordis.loader. Load ordered plugin objects or
+module references, inspect actual Fibers through the batch handle, and dispose the
+batch to join cleanup. Consumer entries can precede providers.
+Run `uv run python examples/plugin_loader.py`.
