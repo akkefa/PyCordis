@@ -1,8 +1,8 @@
 # Architecture and phase status
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
-Phase 3 adds full reversible effect collection. Registry, services and events
-below remain proposed. The TypeScript source separates
+Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
+mounting. Services and events below remain proposed. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
 LoggerService, and utilities. It has no standalone scope.ts or effects.ts.
 
@@ -152,3 +152,12 @@ See effects.md and ADR 0004. Effect collection and Fiber setup share one engine.
 Unlike the source fail-fast nested chain, cleanup drains all collected callbacks
 before reporting errors. Diagnostics expose immutable effect trees. No registry,
 service or event APIs are introduced.
+
+## Phase 4 implementation
+
+See plugins.md and ADR 0005. Each root owns a Registry shared by its views and
+children. Callback identity shares PluginRuntime records; every mount creates
+a fresh Fiber. Disposal unregisters immediately while parent ownership still
+joins teardown. Remounting during old cleanup creates a protected new record.
+Class plugins construct with context/config and optionally run start(). Injection,
+config validation, internal notifications and service-driven epochs remain future.

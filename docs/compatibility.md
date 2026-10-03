@@ -1,7 +1,7 @@
 # Compatibility status
 
-Phase 3 implements Context views, low-level Fiber lifecycle and reversible
-effects. Services, events and registry remain unimplemented.
+Phase 4 implements Context views, Fiber lifecycle, reversible effects and
+plugin registry. Services and events remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -11,7 +11,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Context hierarchy | Partial: implemented | Root/parent/owner and extend metadata; Python adaptation; no Fiber or proxy services |
 | Fiber lifecycle | Partial: implemented | State/epoch transitions, setup/cleanup, ownership, restart/disposal; no services/publication events |
 | Effects | Implemented with explicit deviations | Manual/automatic, generators, rollback and in-flight joins; drain-all and Python finalization differ |
-| Registry/plugin forms | Future | plugin.spec.ts functions, object apply, invalid/nested plugins, shared runtimes |
+| Registry/plugin forms | Implemented with Python adaptations | Functions, callable objects, apply methods, classes, nested mounts, shared runtimes |
 | Services and injection | Future | service.spec.ts, reflect.spec.ts; required-service snapshot and inactive access |
 | Reactive reload | Future | fiber.spec.ts provider disposal/loading races; isolate.spec.ts service restoration |
 | Events | Future | events.spec.ts modes/filtering/errors; preserve zero/empty-string bail |
@@ -108,3 +108,29 @@ Intentional semantic deviation: nested callback failures do not stop cleanup;
 remaining callbacks drain, then one original or a grouped error is raised.
 Future work: registry-based mounting, public service injection, internal events,
 service visibility, user background-task ownership helpers and advanced tracing.
+
+## Phase 4 evidence
+
+26 cases in tests/test_registry.py adapt registry.ts/fiber.ts at Harness
+639ed015397290b3745d163aafe02ffee4aa3f84 and plugin.spec.ts at upstream
+56b3d4f725681cf4556c1a8695a709cc3b6eed74. Source test themes: function plugin,
+object plugin, class plugin, invalid plugin, nested plugins, root dispose,
+plugin error and multiple mounts. Tests replace source listener assertions with
+owned effects; event assertions remain future work. No TypeScript suite was run.
+Total Python suite: 110 cases.
+
+Retained behavior: one runtime per executable callback, distinct Fibers/configs
+per mount, scoped child ownership, first-runtime naming, immediate unregister,
+restart retaining the record, failed setup retaining the record until disposal,
+and delete requesting disposal of all mounted Fibers.
+Python adaptations: callable-instance precedence, instance/function identity for
+Python bound methods, optional class start() instead of Symbol-based init,
+immutable inspection tuples, explicit parent in Registry.mount and actual
+awaitable Fiber instead of a PromiseLike facade. Async startup remains scheduled.
+
+Additional safety cases cover unhashable/equal callable instances, cross-root
+mount rejection, invalid apply getters, mount atomicity, owner-state guards and
+remount during old teardown. These are Python-specific regression coverage.
+Nonempty inject and Config declarations raise NotImplementedError until their
+phases. Dependency epochs, schema validation, internal notifications, Config
+metadata and event filters are not claimed by registry coverage.

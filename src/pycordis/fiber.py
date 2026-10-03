@@ -15,6 +15,7 @@ from .errors import CordisError
 
 if TYPE_CHECKING:
     from .context import Context
+    from .registry import PluginRuntime
 
 Cleanup: TypeAlias = Callable[[], object]
 Setup: TypeAlias = Callable[["Context", object], object]
@@ -102,6 +103,8 @@ class Fiber:
         self._cleanup_errors: list[BaseException] = []
         self._cleanups: list[Cleanup] = []
         self._parent_cleanup = None
+        self._runtime: PluginRuntime | None = None
+        self._unregister: Callable[[], None] | None = None
 
     @property
     def parent(self) -> Context:
@@ -110,6 +113,11 @@ class Fiber:
     @property
     def ctx(self) -> Context:
         return self._ctx
+
+    @property
+    def runtime(self) -> PluginRuntime | None:
+        """Shared registry record; None for root and direct low-level mounts."""
+        return self._runtime
 
     @property
     def config(self) -> object:
@@ -305,6 +313,9 @@ class Fiber:
         if self.uid is not None:
             loop = self._bind_loop()
             self._uid = None
+            if self._unregister is not None:
+                self._unregister()
+                self._unregister = None
             self._epoch = None
             if self._task is None:
                 self._state = FiberState.UNLOADING

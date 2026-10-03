@@ -4,8 +4,8 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 3 Context, low-level Fiber lifecycle and reversible effects.
-Services, events and plugin registry are not implemented.**
+**Status: Phase 4 Context, Fiber lifecycle, reversible effects and plugin registry.
+Services and events are not implemented.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -25,7 +25,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Registry and plugin mounting. Read the
+The next reviewed increment is Services and dependency injection. Read the
+[Plugin guide](docs/plugins.md) and [Registry ADR](docs/adr/0005-plugin-registry.md). Read the
 [Effects guide](docs/effects.md) and [Effects ADR](docs/adr/0004-reversible-effects.md). Read the
 [Fiber lifecycle guide](docs/lifecycle.md) and
 [Fiber ADR](docs/adr/0003-fiber-lifecycle.md). Read the
@@ -72,3 +73,10 @@ to settle async setup, or call it to request manual cleanup. Owner unload
 automatically joins setup and all owned cleanup. Run
 `uv run python examples/effects.py`. Nested cleanup deliberately drains all
 callbacks before reporting errors; see the compatibility notes.
+
+## Plugin mounting
+
+Mount with `fiber = ctx.plugin(plugin, config)` and await the Fiber to settle
+setup. Every mount has independent ownership; mounts of one callback share a
+registry runtime. Functions, callable instances, `apply` objects and constructor
+classes are supported. Run `uv run python examples/basic_plugin.py`.

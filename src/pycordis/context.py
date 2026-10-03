@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Self
 if TYPE_CHECKING:
     from .effects import Effect
     from .fiber import Fiber
+    from .registry import Registry
 
 
 class _Metadata(Mapping[str, object]):
@@ -43,7 +44,7 @@ class Context:
     their parent's root and owning context; they do not create lifecycle work.
     """
 
-    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_root")
+    __slots__ = ("_fiber", "_metadata", "_owner", "_parent", "_registry", "_root")
 
     def __init__(self) -> None:
         self._parent: Context | None = None
@@ -53,6 +54,9 @@ class Context:
         from .fiber import Fiber
 
         self._fiber = Fiber._create_root(self)
+        from .registry import Registry
+
+        self._registry = Registry(self)
 
     @property
     def parent(self) -> Context | None:
@@ -86,6 +90,15 @@ class Context:
         """
         return self._metadata
 
+    @property
+    def registry(self) -> Registry:
+        """Root-local runtime records shared by ordinary views and plugin scopes."""
+        return self._registry
+
+    def plugin(self, plugin: object, config: object = None) -> Fiber:
+        """Mount a plugin in this context and return its actual awaitable Fiber."""
+        return self.registry.mount(self, plugin, config)
+
     def effect(self, setup: Callable[[], object], label: str = "anonymous") -> Effect:
         """Create a reversible effect owned by this context's Fiber."""
         return self.fiber.effect(setup, label)
@@ -108,5 +121,6 @@ class Context:
         child._root = self.root
         child._owner = self.owner
         child._fiber = self.fiber
+        child._registry = self.registry
         child._metadata = _Metadata(entries, self.metadata)
         return child
