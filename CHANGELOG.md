@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Phase 9: immutable PluginMeta, PluginSpec, identity-preserving plugin_meta
+  decorator, inspect_plugin, per-runtime/per-mount snapshots, Service provide-name
+  fallback, 30 metadata cases, guide, ADR and runnable example.
+- Explicit declarations replace conventional attributes; provide/intercept remain
+  descriptive for generic plugins. Validator execution and automatic method
+  injection remain deferred.
+
 - Phase 8: identity ScopeLabel isolation, slot-specific reactive notifications,
   owned bindings separated from dependency snapshots, inherited/copied intercept
   mappings and inject config, Service config merge/filter helpers, task-local
@@ -49,4 +56,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- Kernel event publication hooks, advanced reflection/validation and tracing remain future work; no release published.
+- Kernel event publication hooks, advanced method reflection/validation and tracing remain future work; no release published.

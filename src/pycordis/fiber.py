@@ -16,6 +16,7 @@ from .scope import _current_context
 
 if TYPE_CHECKING:
     from .context import Context
+    from .metadata import PluginMeta
     from .registry import PluginRuntime
     from .scope import ScopeLabel
     from .services import _Binding
@@ -115,6 +116,7 @@ class Fiber:
         self._cleanups: list[Cleanup] = []
         self._parent_cleanup = None
         self._runtime: PluginRuntime | None = None
+        self._plugin_meta: PluginMeta | None = None
         self._unregister: Callable[[], None] | None = None
         self._inject = ()
         self._bindings: dict[str, _Binding] = {}
@@ -133,6 +135,11 @@ class Fiber:
     def runtime(self) -> PluginRuntime | None:
         """Shared registry record; None for root and direct low-level mounts."""
         return self._runtime
+
+    @property
+    def plugin_meta(self) -> PluginMeta | None:
+        """This mount's declaration snapshot; None for root/direct Fibers."""
+        return self._plugin_meta
 
     @property
     def inject(self) -> tuple[str, ...]:

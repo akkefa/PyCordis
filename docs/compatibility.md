@@ -1,6 +1,6 @@
 # Compatibility status
 
-Phase 8 implements Context/Fiber/effects, registry, scoped reactive services,
+Phase 9 implements explicit plugin metadata plus Context/Fiber/effects, registry, scoped reactive services,
 Service classes, events and explicit intercept config/caller scopes. Kernel event
 hooks, advanced reflection, validation and proxy tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
@@ -19,7 +19,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Events | Implemented public dispatch with Python policies | Owned listeners, five modes, explicit filtering, error groups; kernel hooks future |
 | Isolation/intercept | Implemented explicit core | Identity labels, config layers/merge, Service predicates and ContextVar callers; proxy tracing future |
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
-| Decorators/metadata | Future | decorator.spec.ts; explicit Python declarations to evaluate |
+| Decorators/metadata | Python adaptation | Immutable explicit records and identity-preserving plugin decorators; automatic method injection future |
 | Config validation/lazy resolution | Future | Harness fiber.ts and boot integration tests |
 | Loader/volatile config | Future | Separate loader; documented Harness patches |
 | JS cross-realm Symbol brand, Proxy machinery | Not mechanically portable | Behavioral equivalents where needed; JS-specific representation inapplicable |
@@ -309,3 +309,19 @@ Service prototype extension, cross-realm brands, Config-schema merge/validation,
 plugin metadata decorators, and internal kernel event producers/interceptors.
 Interception here means service-specific config resolution; it is not an automatic
 hook on every get/set or arbitrary operation. Middleware dispatch is still explicit.
+
+## Phase 9 evidence
+
+The pinned Harness registry.ts Plugin.Base/Inject.resolve/callback resolution and
+service.ts name/provide fallback guide metadata normalization. Thirty new cases in
+tests/test_metadata.py are Python-specific adaptations: copied/frozen declarations,
+legacy attributes, decorator identity/inheritance, independent mount requirements,
+Service fallback, Config rejection, atomic errors and one apply-getter resolution.
+The full Python suite has 294 cases. No TypeScript suite or Harness boot was run.
+
+Pinned upstream decorator.spec.ts class injection motivates explicit inject
+declarations. Python declarations are authoritative complete replacements rather
+than additive @Inject inheritance. Its method injection test remains future work
+because it requires child mounting and context shadow rebinding. No reusable flag
+or singleton mount behavior is inferred from unused conventions. Provide/intercept
+are descriptive for general plugins; configuration validation is Phase 10.

@@ -26,7 +26,22 @@ class Service:
     def __init__(self, ctx: Context, config: object = None, *, name: str | None = None) -> None:
         self._ctx = ctx
         self._config = config
-        self.name = _name(type(self).name if name is None else name)
+        declared = type(self).name if name is None else name
+        if name is None and not declared:
+            from .metadata import inspect_plugin
+
+            meta = (
+                ctx.fiber.plugin_meta
+                if ctx.fiber.runtime is not None and ctx.fiber.runtime.callback is type(self)
+                else inspect_plugin(type(self))
+            )
+            if meta is None or len(meta.provide) != 1:
+                raise TypeError(
+                    "service names must be nonempty strings; "
+                    "Service needs one declared provide name or an explicit name"
+                )
+            declared = meta.provide[0]
+        self.name = _name(declared)
         self._binding_name = self.name
         self._binding_label = ctx.service_scope(self.name)
         self._registration = ctx.provide(self.name, self, check=self.check)

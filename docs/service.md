@@ -74,3 +74,11 @@ implicit close/stop/destructor hook. Owned effects supply cleanup. Caller-contex
 service lookup remain later work. Phase 8 adds explicit label isolation,
 matches_scope, and resolve_config; see scope.md. The defining context remains
 unchanged when resolving caller configuration. See services.md for reactive teardown.
+
+## Metadata declarations (Phase 9)
+
+A Service with an empty class name can use one provide name from PluginMeta or
+its conventional provide attribute. Explicit constructor name wins over class
+name, which wins over this fallback. Display metadata name does not name the
+service slot. Multiple provide names require an explicit binding name; the base
+class still registers one service. See [metadata.md](metadata.md).

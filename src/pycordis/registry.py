@@ -9,7 +9,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, cast
 
 from .fiber import Fiber, Setup
-from .services import normalize_inject
+from .metadata import PluginMeta, _inspect_meta, _resolve_callback
 
 if TYPE_CHECKING:
     from .context import Context
@@ -18,9 +18,9 @@ if TYPE_CHECKING:
 class PluginRuntime:
     """Read-only inspection of a shared plugin callback and its mounted Fibers."""
 
-    def __init__(self, callback: Setup, name: str | None) -> None:
+    def __init__(self, callback: Setup, meta: PluginMeta) -> None:
         self._callback = callback
-        self._name = name
+        self._metadata = meta
         self._fibers: list[Fiber] = []
 
     @property
@@ -29,7 +29,12 @@ class PluginRuntime:
 
     @property
     def name(self) -> str | None:
-        return self._name
+        return self._metadata.name
+
+    @property
+    def metadata(self) -> PluginMeta:
+        """First registration's immutable declaration; each Fiber has its own."""
+        return self._metadata
 
     @property
     def fibers(self) -> tuple[Fiber, ...]:
@@ -50,15 +55,7 @@ class Registry:
     @staticmethod
     def resolve(plugin: object) -> Setup | None:
         """Resolve an executable callback without propagating apply getter errors."""
-        try:
-            if callable(plugin):
-                return cast(Setup, plugin)
-            callback = getattr(plugin, "apply", None)
-            if callable(callback):
-                return cast(Setup, callback)
-        except Exception:
-            pass
-        return None
+        return cast(Setup | None, _resolve_callback(plugin))
 
     @staticmethod
     def _key(callback: Setup) -> tuple[int, ...]:
@@ -103,21 +100,15 @@ class Registry:
         loop = asyncio.get_running_loop()
         parent.fiber._assert_registration()
         parent.fiber._bind_loop(loop)
-        inject = normalize_inject(getattr(plugin, "inject", None))
-        if getattr(plugin, "Config", None) is not None:
+        meta = _inspect_meta(plugin, callback)
+        inject = meta.inject
+        if meta.config is not None:
             raise NotImplementedError("plugin Config schemas require the validation phase")
         key = self._key(callback)
         runtime = self._records.get(key)
         created = runtime is None
         if runtime is None:
-            name = getattr(plugin, "name", None)
-            if name is None:
-                name = getattr(callback, "__name__", None)
-            if name in ("apply", "<lambda>"):
-                name = None
-            if name is not None and not isinstance(name, str):
-                raise TypeError("plugin name must be a string")
-            runtime = PluginRuntime(callback, name)
+            runtime = PluginRuntime(callback, meta)
             self._records[key] = runtime
         try:
             fiber = Fiber(
@@ -132,6 +123,7 @@ class Registry:
                 fiber.ctx._intercepts = (*fiber.ctx._intercepts, MappingProxyType(intercepts))
             runtime._fibers.append(fiber)
             fiber._runtime = runtime
+            fiber._plugin_meta = meta
             fiber._unregister = lambda: self._remove(key, runtime, fiber)
             parent._services.refresh(fiber)
             return fiber

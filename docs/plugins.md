@@ -69,3 +69,10 @@ declared name. The base registers the instance and supplies start/check hooks;
 existing class mounting waits for start before publishing ACTIVE availability.
 Restart constructs a new instance. See service.md for constructor ownership and
 why direct construction does not invoke start automatically.
+
+## Explicit metadata (Phase 9)
+
+PluginMeta, PluginSpec, plugin_meta and inspect_plugin add explicit declarations
+without changing callback identity. Runtime.metadata records the first mount;
+Fiber.plugin_meta records each mount. Specs work with registry lookup and deletion.
+See [metadata.md](metadata.md) for field semantics and declaration precedence.

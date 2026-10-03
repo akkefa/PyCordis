@@ -27,7 +27,7 @@ flowchart TD
 | fiber.ts / Fiber, FiberState | Per-mount lifecycle; dependency epochs; config; ownership | fiber.py / Fiber, FiberState |
 | fiber.ts / effect, _execute | Reversible setup; generator effects; joined cleanup | effects.py if extraction simplifies fiber.py |
 | registry.ts / RegistryService, Plugin.Runtime | Normalize plugin forms; callback identity; live fibers | registry.py / Registry, PluginRuntime |
-| registry.ts / Inject.resolve | Normalize dependency declarations | metadata.py / dependency normalization, later |
+| registry.ts / Inject.resolve | Normalize dependency declarations | metadata.py / explicit declarations; services.py / dependency normalization |
 | reflect.ts / ReflectService, Impl | Service slots, availability, access checks, notify, proxy hooks | reflect.py / ServiceRegistry and binding records |
 | service.ts / Service | Named self-registering service; traced context; intercept config | service.py / Service |
 | events.ts / EventsService | on/once; emit/parallel/serial/bail/waterfall; filters | events.py / Events |
@@ -213,3 +213,12 @@ or active callers, merges base/intercepts/head through merge_config, and validat
 the caller's root/label. Service.matches_scope supplies explicit event filtering.
 Proxy service attributes, automatic method context rebinding and internal kernel
 interception producers are not claimed by these explicit APIs.
+
+## Phase 9 implementation
+
+metadata.py normalizes PluginMeta from explicit PluginSpec/decorator records or
+conventional attributes. Registry resolves the executable once and snapshots its
+declaration before allocation. Shared PluginRuntime retains the first snapshot;
+Fiber retains per-mount metadata and dependencies. Service supports a single
+provide-name fallback. Config validation and method injection remain separate.
+See [metadata.md](metadata.md) and [ADR 0010](adr/0010-plugin-metadata.md).

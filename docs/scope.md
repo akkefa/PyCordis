@@ -110,5 +110,9 @@ child emission still reaches all root listeners. Isolation does not automaticall
 filter every event and intercept config does not install middleware handlers.
 
 This phase provides explicit scope/config APIs. Attribute proxies, method tracing
-and shadow rebinding, Service prototype extension, metadata decorators, config
+and shadow rebinding, Service prototype extension, automatic method injection, config
 schemas and internal kernel interception hooks remain future work.
+
+Phase 9 adds plugin-wide declaration decorators; their inject mappings use these
+existing per-mount intercept layers. Metadata intercept flags describe capabilities
+and do not create configuration or event handlers.
