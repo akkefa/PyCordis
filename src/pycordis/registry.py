@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 from collections.abc import Iterator
+from types import MappingProxyType
 from typing import TYPE_CHECKING, cast
 
 from .fiber import Fiber, Setup
@@ -124,8 +125,11 @@ class Registry:
                 self._setup(runtime.callback),
                 config,
                 name=runtime.name,
-                _dependencies=inject,
+                _dependencies=tuple(inject),
             )
+            intercepts = {name: config for name, config in inject.items() if config is not None}
+            if intercepts:
+                fiber.ctx._intercepts = (*fiber.ctx._intercepts, MappingProxyType(intercepts))
             runtime._fibers.append(fiber)
             fiber._runtime = runtime
             fiber._unregister = lambda: self._remove(key, runtime, fiber)

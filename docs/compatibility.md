@@ -1,8 +1,8 @@
 # Compatibility status
 
-Phase 7 implements Context, Fiber lifecycle, effects, registry, reactive services,
-Service classes and owned event dispatch. Kernel publication/interception hooks,
-isolation and tracing remain unimplemented.
+Phase 8 implements Context/Fiber/effects, registry, scoped reactive services,
+Service classes, events and explicit intercept config/caller scopes. Kernel event
+hooks, advanced reflection, validation and proxy tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -13,11 +13,11 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Fiber lifecycle | Partial: implemented | State/epoch transitions, setup/cleanup, ownership, restart/disposal; no services/publication events |
 | Effects | Implemented with explicit deviations | Manual/automatic, generators, rollback and in-flight joins; drain-all and Python finalization differ |
 | Registry/plugin forms | Implemented with Python adaptations | Functions, callable objects, apply methods, classes, nested mounts, shared runtimes |
-| Services and injection | Implemented for one root scope | Owned provide/get/set, required snapshots, inactive access, reactive inject |
+| Services and injection | Implemented with isolation labels | Owned bindings, scoped snapshots/notifications, reactive inject with config |
 | Service abstraction | Implemented core with Python adaptations | Constructor-owned instance, start/check, native callable subclasses; advanced helpers deferred |
-| Reactive reload | Implemented for root-wide bindings | Provider loss/restoration, loading/unloading races; isolated scopes remain future |
+| Reactive reload | Implemented for scoped bindings | Provider loss/restoration, generation epochs and isolated loading/unloading races |
 | Events | Implemented public dispatch with Python policies | Owned listeners, five modes, explicit filtering, error groups; kernel hooks future |
-| Isolation/intercept | Future | isolate.spec.ts independent/shared labels and filtered events |
+| Isolation/intercept | Implemented explicit core | Identity labels, config layers/merge, Service predicates and ContextVar callers; proxy tracing future |
 | Traced service methods | Future | shadow/associate/invoke suites; Python adaptation required |
 | Decorators/metadata | Future | decorator.spec.ts; explicit Python declarations to evaluate |
 | Config validation/lazy resolution | Future | Harness fiber.ts and boot integration tests |
@@ -263,3 +263,49 @@ Deferred: internal/listener interception, scoped internal/update routing, kernel
 plugin/status/service/config notifications, proxy get/set events and telemetry
 this binding. Scope/isolation/interception is Phase 8. Event filters already supply
 an explicit callback-context seam; they do not establish isolation labels.
+
+## Phase 8 evidence
+
+31 test_scope.py cases adapt Harness context.ts/reflect.ts/service.ts/registry.ts
+at 639ed015397290b3745d163aafe02ffee4aa3f84. Source suites at upstream baseline
+56b3d4f725681cf4556c1a8695a709cc3b6eed74 supply isolation/config themes.
+Total Python suite: 264 cases. No TypeScript suite or live Harness integration ran.
+
+| Source behavior/test | Python coverage / classification |
+|---|---|
+| isolate.spec.ts: isolated context | Independent labels hide default provider; scoped activation/removal/set; explicit get/require adaptation |
+| isolate.spec.ts: shared label | ScopeLabel reuse joins views, duplicate rejection, both consumers unload |
+| isolate.spec.ts: isolated event | Service.matches_scope explicitly filters listeners; global option bypass preserved |
+| context.ts extend/isolate/intercept | View ownership, inheritance, copied entries and ancestor precedence |
+| service.ts resolveConfig | Base/intercepts/head order, fresh dict, custom merge_config hook; explicit caller API replaces tracing |
+| registry.ts Inject.resolve / Fiber constructor intercept map | Per-mount injection mappings layer over ancestor config and preserve callback identity |
+| invoke.spec.ts / logger.spec.ts intercept themes | Explicit async operation caller scope tested; callable proxies/logger tracing future |
+
+Additional cases cover matching-label replacement during async cleanup, isolated
+provider disposal, root boundaries, multiple same-owner slots, label reuse across
+names, scope restoration after exceptions/cancellation, concurrent requests,
+async setup/cleanup, registering effect views, dispatcher callback views and
+consumer-context availability checks. The Phase 5 deferred-config test now verifies
+invalid non-mapping config rejection; valid mappings are implemented.
+
+Retained core: one-service label isolation, shared labels, unchanged ownership,
+other services inherited, scoped notifications, snapshots retained through cleanup,
+ancestor-first config merge and explicit event-filter behavior.
+Python adaptations: ScopeLabel objects, immutable copied mapping layers, string-key
+configs, resolve_config/merge_config helpers, Context.scope/current_context using
+ContextVars. Explicit ctx overrides active caller, then defining context is fallback.
+Service method ctx/ownership are not rebound. Setup/cleanup activate their defining
+views; predicates activate consumer views; events activate dispatcher views.
+
+Intentional strengthening: slots key by (service name, label), preventing the
+source's label-only cross-name aliasing. require verifies snapshot labels and does
+not cross an isolation boundary, including changed views of the same Fiber. Owned
+slot maps prevent same-owner provisions from overwriting dependency snapshots.
+Default labels are created lazily on inspection/lookup as well as provision.
+Config entries are shallow-copied; nested object identities remain shared.
+
+Deferred: transparent attribute proxies, automatic method shadow/rebinding,
+Service prototype extension, cross-realm brands, Config-schema merge/validation,
+plugin metadata decorators, and internal kernel event producers/interceptors.
+Interception here means service-specific config resolution; it is not an automatic
+hook on every get/set or arbitrary operation. Middleware dispatch is still explicit.

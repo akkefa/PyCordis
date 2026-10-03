@@ -4,8 +4,9 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 7 Context, Fiber lifecycle, effects, registry, reactive services,
-Service classes and owned event dispatch. Isolation and tracing remain future work.**
+**Status: Phase 8 Context, Fiber lifecycle, effects, registry, scoped reactive
+services, Service classes, owned events and intercept configuration. Advanced
+reflection, validation, tracing and kernel event hooks remain future work.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -25,7 +26,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is Scope, Isolation and Interception. Read the
+The next reviewed increment is Reflection / Plugin Metadata. Read the
+[Scope guide](docs/scope.md) and [Scope ADR](docs/adr/0009-scoped-services.md). Read the
 [Events guide](docs/events.md) and [Events ADR](docs/adr/0008-owned-events.md). Read the
 [Service class guide](docs/service.md) and [Service ADR](docs/adr/0007-service-abstraction.md). Read the
 [Services guide](docs/services.md) and [Services ADR](docs/adr/0006-reactive-services.md). Read the
@@ -118,4 +120,13 @@ synchronous callbacks, parallel/serial for async callbacks, and waterfall for
 middleware chaining. None/False mean no bail; zero and empty values stop dispatch.
 Explicit filter_ selects listener contexts; child dispatch is root-wide by default.
 Run `uv run python examples/events.py`. Kernel publication/interception hooks and
-advanced scopes remain future work.
+advanced proxy tracing remains future work.
+
+## Service scopes and intercept config
+
+`ctx.isolate("database")` creates a view with a private database slot while other
+services keep their labels. Reuse a ScopeLabel to join views. Intercept mappings
+merge ancestor first; inject mappings can add per-mount config. Resolve operation
+config with Service.resolve_config inside `with caller.scope():` or an explicit
+ctx argument. Scoped event filtering stays explicit with service.matches_scope.
+Run `uv run python examples/scoped_services.py`.

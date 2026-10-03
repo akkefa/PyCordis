@@ -59,7 +59,11 @@ root.emit("message", value, filter_=lambda ctx: ctx.metadata["scope"] == "left")
 
 Filters must be synchronous. They apply before callback delivery; errors propagate
 before the dispatch starts. Listeners keep ordinary Python function/method binding;
-no JavaScript thisArg or caller-context tracing is emulated.
+no JavaScript thisArg or method-context rebinding is emulated. Phase 8 activates
+the dispatcher view in current_context across callback awaits; use a service
+operation's resolve_config to read those caller intercepts. Use service.matches_scope
+as filter_ to dispatch only within that service label. Child emission still has
+no implicit filtering.
 
 Waterfall receives fixed event args, plus a shared zero-argument continuation.
 Its terminal is a required keyword callback next_, invoked with no arguments:

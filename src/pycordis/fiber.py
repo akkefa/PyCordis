@@ -12,10 +12,12 @@ from typing import TYPE_CHECKING, TypeAlias
 
 from .effects import Effect, EffectMeta, _active_effects
 from .errors import CordisError
+from .scope import _current_context
 
 if TYPE_CHECKING:
     from .context import Context
     from .registry import PluginRuntime
+    from .scope import ScopeLabel
     from .services import _Binding
 
 Cleanup: TypeAlias = Callable[[], object]
@@ -116,6 +118,7 @@ class Fiber:
         self._unregister: Callable[[], None] | None = None
         self._inject = ()
         self._bindings: dict[str, _Binding] = {}
+        self._owned_bindings: dict[tuple[str, ScopeLabel], _Binding] = {}
         self._store: dict[str, _Binding] | None = {}
 
     @property
@@ -234,6 +237,7 @@ class Fiber:
         )
 
     async def _drive(self) -> None:
+        scope_token = _current_context.set(self.ctx)
         token = _executing.set((*_executing.get(), self))
         try:
             while True:
@@ -278,6 +282,7 @@ class Fiber:
         finally:
             self._task = None
             _executing.reset(token)
+            _current_context.reset(scope_token)
 
     async def _unload(self) -> None:
         cleanups = self._cleanups[::-1]

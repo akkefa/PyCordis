@@ -448,10 +448,10 @@ async def test_invalid_dependency_declarations_are_atomic(declaration: object) -
 
 
 @pytest.mark.asyncio
-async def test_intercept_configs_are_explicitly_deferred() -> None:
+async def test_invalid_intercept_configs_are_rejected() -> None:
     root = Context()
-    with pytest.raises(NotImplementedError):
-        root.inject({"database": {}}, lambda ctx, cfg: None)
+    with pytest.raises(TypeError):
+        root.inject({"database": 1}, lambda ctx, cfg: None)
     assert root.registry.size == 0
 
 

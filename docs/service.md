@@ -62,7 +62,7 @@ consumers. Use ctx.plugin for async initialization and automatic full lifecycle
 coordination. Direct construction requires no loop until async removal or other
 loop-bound work occurs. Name collisions reject the new registration and preserve
 the original binding. Two mounts of one class share a plugin runtime but cannot
-provide the same name in the same root scope simultaneously.
+provide the same name in the same service label simultaneously.
 
 A callable service defines ordinary __call__; get/require return that same
 instance. Python isinstance recognizes the subclass without Cordis's special
@@ -70,7 +70,7 @@ proxy logic. A constructor's returned instance is never treated as a cleanup
 callback, including when it is callable.
 
 Service is a convenience base, not an abstract resource manager: there is no
-implicit close/stop/destructor hook. Owned effects supply cleanup. Caller-context
-tracing, Service extend/filter helpers, intercept config resolution, decorators,
-isolation and attribute service lookup remain later work. All bindings still
-share the root scope. See services.md for snapshots and reactive teardown.
+implicit close/stop/destructor hook. Owned effects supply cleanup. Caller-context tracing, prototype extension helpers, decorators and attribute
+service lookup remain later work. Phase 8 adds explicit label isolation,
+matches_scope, and resolve_config; see scope.md. The defining context remains
+unchanged when resolving caller configuration. See services.md for reactive teardown.

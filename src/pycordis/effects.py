@@ -11,8 +11,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .errors import CordisError
+from .scope import _current_context
 
 if TYPE_CHECKING:
+    from .context import Context
     from .fiber import Cleanup, Fiber
 
 _active_effects: ContextVar[tuple[Effect, ...]] = ContextVar("pycordis_effects", default=())
@@ -49,12 +51,14 @@ class Effect:
         label: str = "anonymous",
         *,
         _valid: Callable[[], bool] | None = None,
+        _context: Context | None = None,
     ) -> None:
         owner._assert_registration()
         if not callable(setup):
             raise TypeError("effect setup must be callable")
         if not isinstance(label, str):
             raise TypeError("effect label must be a string")
+        self._context = _context if _context is not None else owner.ctx
         self._valid = _valid or (lambda: True)
         self._owner = owner
         self._label = label
@@ -68,6 +72,7 @@ class Effect:
         self._finished = False
         self._collected_by: Effect | None = None
         owner.add_cleanup(self)  # Before any setup code or reentrant owner disposal.
+        scope_token = _current_context.set(self._context)
         token = _active_effects.set((*_active_effects.get(), self))
         try:
             result = setup()
@@ -94,6 +99,7 @@ class Effect:
             raise
         finally:
             _active_effects.reset(token)
+            _current_context.reset(scope_token)
 
     @property
     def owner(self) -> Fiber:
@@ -147,6 +153,7 @@ class Effect:
             raise TypeError("invalid effect setup result: expected a cleanup callable or iterable")
 
     async def _setup_async(self, result: object) -> None:
+        scope_token = _current_context.set(self._context)
         token = _active_effects.set((*_active_effects.get(), self))
         try:
             if inspect.isawaitable(result):
@@ -180,6 +187,7 @@ class Effect:
             raise
         finally:
             _active_effects.reset(token)
+            _current_context.reset(scope_token)
 
     def _observe(self, task: asyncio.Task[None]) -> None:
         if not task.cancelled():
@@ -240,6 +248,7 @@ class Effect:
     async def _cleanup_async(
         self, first: Awaitable[object], remaining: list[Cleanup], errors: list[BaseException]
     ) -> None:
+        scope_token = _current_context.set(self._context)
         token = _active_effects.set((*_active_effects.get(), self))
         try:
             try:
@@ -261,8 +270,10 @@ class Effect:
         finally:
             self._finish()
             _active_effects.reset(token)
+            _current_context.reset(scope_token)
 
     async def _dispose_after_setup(self) -> None:
+        scope_token = _current_context.set(self._context)
         token = _active_effects.set((*_active_effects.get(), self))
         try:
             if self._setup_task is not None:
@@ -291,6 +302,7 @@ class Effect:
         finally:
             self._finish()
             _active_effects.reset(token)
+            _current_context.reset(scope_token)
 
     def __call__(self) -> Awaitable[None] | None:
         if self._requested:
@@ -303,11 +315,13 @@ class Effect:
             self._dispose_task.add_done_callback(self._observe)
             return _Join(self)
         self._requested = True
+        scope_token = _current_context.set(self._context)
         token = _active_effects.set((*_active_effects.get(), self))
         try:
             return self._begin_cleanup()
         finally:
             _active_effects.reset(token)
+            _current_context.reset(scope_token)
 
     def _dispose_owned(self) -> Awaitable[None] | None:
         result = self()

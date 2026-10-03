@@ -124,26 +124,31 @@ class Events:
     def _dispatch(
         self, mode: str, name: str, args: tuple[object, ...], filter_: EventFilter | None
     ) -> tuple[Listener, ...]:
-        name = _name(name)
-        if filter_ is not None and (not callable(filter_) or inspect.iscoroutinefunction(filter_)):
-            raise TypeError("event filter must be a synchronous callable")
-        if not name.startswith("internal/"):
-            self.emit("internal/dispatch", mode, name, args, filter_)
-        return tuple(
-            hook.callback
-            for hook in tuple(self._hooks.get(name, ()))
-            if hook.global_ or filter_ is None or _sync_result(filter_(hook.ctx))
-        )
+        with self._ctx.scope():
+            name = _name(name)
+            if filter_ is not None and (
+                not callable(filter_) or inspect.iscoroutinefunction(filter_)
+            ):
+                raise TypeError("event filter must be a synchronous callable")
+            if not name.startswith("internal/"):
+                self.emit("internal/dispatch", mode, name, args, filter_)
+            return tuple(
+                hook.callback
+                for hook in tuple(self._hooks.get(name, ()))
+                if hook.global_ or filter_ is None or _sync_result(filter_(hook.ctx))
+            )
 
     def emit(self, name: str, *args: object, filter_: EventFilter | None = None) -> None:
         """Call listeners inline, ignoring sync results; first error stops delivery."""
         for callback in self._dispatch("emit", name, args, filter_):
-            _sync_result(callback(*args))
+            with self._ctx.scope():
+                _sync_result(callback(*args))
 
     def bail(self, name: str, *args: object, filter_: EventFilter | None = None) -> object:
         """Call inline and return the first result other than None/False."""
         for callback in self._dispatch("bail", name, args, filter_):
-            result = _sync_result(callback(*args))
+            with self._ctx.scope():
+                result = _sync_result(callback(*args))
             if is_bailed(result):
                 return result
         return None
@@ -152,7 +157,8 @@ class Events:
         """Await all listeners concurrently and group all failures in registration order."""
 
         async def run(callback: Listener) -> None:
-            await _resolve(callback(*args))
+            with self._ctx.scope():
+                await _resolve(callback(*args))
 
         # Preserve the pinned source's historical telemetry mode 'emit'.
         results = await asyncio.gather(
@@ -166,7 +172,8 @@ class Events:
     async def serial(self, name: str, *args: object, filter_: EventFilter | None = None) -> object:
         """Await in order; first bail result or error ends the dispatch."""
         for callback in self._dispatch("serial", name, args, filter_):
-            result = await _resolve(callback(*args))
+            with self._ctx.scope():
+                result = await _resolve(callback(*args))
             if is_bailed(result):
                 return result
         return None
@@ -187,12 +194,14 @@ class Events:
         async def resolve(value: object) -> object:
             token = asynchronous.set(True)
             try:
-                return await _resolve(value)
+                with self._ctx.scope():
+                    return await _resolve(value)
             finally:
                 asynchronous.reset(token)
 
         def advance() -> object:
-            result = callbacks.popleft()(*args, continuation) if callbacks else next_()
+            with self._ctx.scope():
+                result = callbacks.popleft()(*args, continuation) if callbacks else next_()
             return resolve(result) if inspect.isawaitable(result) else result
 
         async def advance_async() -> object:

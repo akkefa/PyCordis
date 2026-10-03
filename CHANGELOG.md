@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Phase 8: identity ScopeLabel isolation, slot-specific reactive notifications,
+  owned bindings separated from dependency snapshots, inherited/copied intercept
+  mappings and inject config, Service config merge/filter helpers, task-local
+  caller scopes across setup/cleanup/events, 31 scope test cases, docs and example.
+- Deliberate scope strengthening: slots key by service name plus label; require
+  verifies snapshot labels to prevent crossing changed isolation boundaries.
+
+
 - Phase 7: scoped Events facade, owned on/once, prepend/global/filter options,
   emit/parallel/serial/bail/waterfall, dispatch diagnostics, 57 event test cases,
   guide, ADR and runnable example.
@@ -41,4 +49,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- Kernel event publication hooks, isolation and tracing remain future work; no release published.
+- Kernel event publication hooks, advanced reflection/validation and tracing remain future work; no release published.

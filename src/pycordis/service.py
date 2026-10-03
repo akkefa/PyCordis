@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
+from .scope import current_context
 from .services import _name
 
 if TYPE_CHECKING:
@@ -25,6 +27,8 @@ class Service:
         self._ctx = ctx
         self._config = config
         self.name = _name(type(self).name if name is None else name)
+        self._binding_name = self.name
+        self._binding_label = ctx.service_scope(self.name)
         self._registration = ctx.provide(self.name, self, check=self.check)
 
     @property
@@ -49,3 +53,31 @@ class Service:
     def check(self) -> bool:
         """Synchronous dependency availability predicate; strict get ignores it."""
         return True
+
+    def matches_scope(self, ctx: Context) -> bool:
+        """Filter listeners/callers to this implementation's service label."""
+        return (
+            ctx.root is self.ctx.root
+            and ctx.service_scope(self._binding_name) is self._binding_label
+        )
+
+    def resolve_config(
+        self,
+        base: Mapping[str, object] | None = None,
+        head: Mapping[str, object] | None = None,
+        *,
+        ctx: Context | None = None,
+    ) -> dict[str, object]:
+        """Resolve caller intercepts explicitly or from the current ContextVar."""
+        caller = ctx if ctx is not None else current_context() or self.ctx
+        if not self.matches_scope(caller):
+            raise ValueError("service config caller belongs to another service scope")
+        return self.merge_config(*caller._config_layers(self._binding_name, base, head))
+
+    @staticmethod
+    def merge_config(*layers: Mapping[str, object]) -> dict[str, object]:
+        """Override for service-specific merging; default is shallow ancestor-first."""
+        result: dict[str, object] = {}
+        for layer in layers:
+            result.update(layer)
+        return result

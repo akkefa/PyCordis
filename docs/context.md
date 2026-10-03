@@ -94,3 +94,11 @@ shadowed values, API immutability, invalid input, subclass behavior, and explici
 scope across concurrent async tasks. No cleanup or disposal behavior is claimed.
 See [Fiber lifecycle](lifecycle.md) for Phase 2 ownership and teardown. Full
 effect/proxy tracing remains deferred.
+
+## Scoped views (Phase 8)
+
+isolate(name, label=None) and intercept(name, config) create ordinary child views
+with the same Fiber ownership. They copy isolation entries or append immutable
+intercept layers, without mutating parents. Reusing a ScopeLabel joins one service
+scope. scope() activates a task-local caller and restores it after exit; see
+scope.md for service visibility, config precedence and execution ownership.

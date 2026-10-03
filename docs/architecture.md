@@ -2,7 +2,8 @@
 
 Phase 2 adds Fiber lifecycle and minimal owned cleanup to the Context foundation.
 Phase 3 adds full reversible effect collection. Phase 4 adds Registry and plugin
-mounting. Phase 5 adds service bindings and reactive dependency epochs. Isolation and advanced tracing below remain proposed. Phase 7 implements the
+mounting. Phase 5 adds service bindings and reactive dependency epochs. Phase 8 implements isolation and explicit intercept config resolution. Advanced
+tracing below remains proposed. Phase 7 implements the
 owned event bus; kernel event producers/interceptors are still future. Phase 6 adds the Service
 base class on top of owned bindings. The TypeScript source separates
 Context, RegistryService, Fiber, ReflectService, EventsService, Service,
@@ -198,3 +199,17 @@ belongs to its caller, while registration cleanup belongs to the defining Fiber.
 Waterfall's zero-argument continuation retains fixed event arguments and can await
 sync tails once an async middleware runs. Non-internal dispatch publishes diagnostic
 internal/dispatch; provider/plugin/status/config interception producers are deferred.
+
+## Phase 8 implementation
+
+See scope.md and ADR 0009. Context views share ownership but carry immutable
+isolation maps and inherited intercept layers. Service slots key by name/label;
+notifications refresh only matching consumers. Owned bindings have their own
+per-Fiber slot map, keeping dependency snapshots separate during cleanup.
+ScopeLabel is an opaque identity token. Context.scope/current_context use a
+ContextVar; setup/cleanup retain the defining view, predicates use consumer views,
+and callbacks use their dispatcher's view. Service.resolve_config accepts explicit
+or active callers, merges base/intercepts/head through merge_config, and validates
+the caller's root/label. Service.matches_scope supplies explicit event filtering.
+Proxy service attributes, automatic method context rebinding and internal kernel
+interception producers are not claimed by these explicit APIs.

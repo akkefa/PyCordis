@@ -1,8 +1,8 @@
 # Services and reactive injection
 
 A service is a named binding owned by a Fiber. Context views share one root-wide
-service store. Extend preserves ownership and metadata; it does not create an
-isolated store. Values pass by identity and may be any Python object, including
+service store with slots keyed by service name and label. Extend preserves
+ownership and labels; isolate changes only the selected service label. Values pass by identity and may be any Python object, including
 None, False or zero. A binding exists independently of its value's truthiness.
 
 ```python
@@ -13,8 +13,8 @@ fiber = await root.inject(["database"], consumer)
 Functions, callable objects, apply objects and constructor classes may declare
 inject as a list/tuple of names or a name-to-None mapping. Context.inject is a
 convenience mount with the same callback `(ctx, config)` signature. Requirements
-are copied, deduplicated in order and exposed as fiber.inject. Non-None mapping
-values represent intercept configuration, which is explicitly deferred.
+are copied, deduplicated in order and exposed as fiber.inject. Mapping values add copied per-mount intercept configuration in Phase 8; None adds
+only a requirement.
 
 When any requirement is unavailable, awaiting the Fiber settles PENDING without
 running setup. Awaiting does not wait for future availability. Provider activation
@@ -31,7 +31,7 @@ def consumer(ctx, config):
 `provide(name, value=None, check=None)` immediately creates a binding and returns
 an Effect. Calling the handle requests removal; await its result when non-None.
 Removal is also automatic on owner unload, setup failure or parent disposal.
-Duplicate names in the root scope raise DUPLICATE_SERVICE and preserve the first
+Duplicate names in one service label raise DUPLICATE_SERVICE and preserve the first
 binding. Names must be nonempty strings. A synchronous root can provide without
 an event loop, but asynchronous removal and plugin mounting require one.
 
@@ -77,7 +77,13 @@ joining them would wait for that same removal. Declared dependency cycles with
 no available seed bindings remain pending; this phase does not solve cycles.
 
 The Service base class is implemented in Phase 6; see [Service classes](service.md).
-Attribute service lookup, accessors/mixins,
-traceable methods, isolation/intercept configuration and internal events remain
+Scope/intercept configuration is implemented in Phase 8; see scope.md.
+Attribute service lookup, accessors/mixins, traceable methods and internal events remain
 future work. Root Fiber disposal restarts its lifecycle; it is not terminal
 Context shutdown. Loop-bound service mutations cannot move to another loop.
+
+require checks binding labels while walking ancestors, so changing a view's
+isolation cannot read a snapshot from its prior label. Owned bindings are tracked
+by slot separately from dependency snapshots, allowing one Fiber to provide the
+same name in multiple labels. Scoped removal retains each owned entry through
+its matching consumers' teardown. refresh_services affects only the caller's labels.

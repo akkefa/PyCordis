@@ -8,6 +8,7 @@ from .errors import CordisError
 from .events import Events, is_bailed
 from .fiber import Fiber, FiberState
 from .registry import PluginRuntime, Registry
+from .scope import ScopeLabel, current_context
 from .service import Service
 
 __all__ = [
@@ -21,5 +22,7 @@ __all__ = [
     "PluginRuntime",
     "Registry",
     "Service",
+    "ScopeLabel",
+    "current_context",
     "is_bailed",
 ]
