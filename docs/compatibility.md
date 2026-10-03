@@ -1,8 +1,8 @@
 # Compatibility status
 
-Phase 5 implements Context views, Fiber lifecycle, effects, plugin registry and
-root-scoped reactive service dependencies. Service abstraction, events, isolation
-and tracing remain unimplemented.
+Phase 6 implements Context views, Fiber lifecycle, effects, plugin registry,
+root-scoped reactive service dependencies and the Service base class. Events,
+isolation and tracing remain unimplemented.
 Primary target: Harness 639ed015397290b3745d163aafe02ffee4aa3f84.
 Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 
@@ -14,6 +14,7 @@ Upstream baseline: 56b3d4f725681cf4556c1a8695a709cc3b6eed74.
 | Effects | Implemented with explicit deviations | Manual/automatic, generators, rollback and in-flight joins; drain-all and Python finalization differ |
 | Registry/plugin forms | Implemented with Python adaptations | Functions, callable objects, apply methods, classes, nested mounts, shared runtimes |
 | Services and injection | Implemented for one root scope | Owned provide/get/set, required snapshots, inactive access, reactive inject |
+| Service abstraction | Implemented core with Python adaptations | Constructor-owned instance, start/check, native callable subclasses; advanced helpers deferred |
 | Reactive reload | Implemented for root-wide bindings | Provider loss/restoration, loading/unloading races; isolated scopes remain future |
 | Events | Future | events.spec.ts modes/filtering/errors; preserve zero/empty-string bail |
 | Isolation/intercept | Future | isolate.spec.ts independent/shared labels and filtered events |
@@ -180,3 +181,38 @@ isolation/intercept labels/config, optional dependencies, event notifications,
 config validation and terminal Context disposal. Mapping intercept values fail
 explicitly rather than being silently ignored. Services share a single root scope;
 Context.extend only inherits metadata/ownership and does not isolate bindings.
+
+## Phase 6 evidence
+
+25 test_service.py cases adapt service.ts/fiber.ts at Harness
+639ed015397290b3745d163aafe02ffee4aa3f84 and service.spec.ts at upstream
+56b3d4f725681cf4556c1a8695a709cc3b6eed74. Total Python suite: 176 cases.
+No TypeScript suite or live Harness boot integration was executed.
+
+| Source behavior/test | Coverage and classification |
+|---|---|
+| service.ts constructor / named provider | Self registration by identity and owned removal; Python name declaration and config adaptation |
+| service.spec.ts: pending inject | Async start gates consumers until ACTIVE; Event barrier substitutes event listener |
+| service.spec.ts: multiple injects | Service-class chain activates, unloads and restores with fresh instances |
+| service.spec.ts: compare snapshot | Owned effects/registry drained after disposal; nested child consumer starts after parent activation; event-hook snapshot future |
+| service.ts check symbol / reflect.ts predicates | Bound synchronous check gates consumers, failures logged; explicit refresh_services |
+| service.ts invoke / hasInstance | Native __call__ and isinstance; proxy-aware identity machinery not applicable |
+| service.spec.ts: traceable effect with/without inject | Explicit declared get/require and ordinary method ownership exercised; trace wrappers NOT implemented |
+
+Additional Python regressions cover config identity, inherited/overridden names,
+invalid names, duplicate provider rollback, constructor/start failures, effect
+collection from start, cancelled startup waiters, disposal during startup, manual
+registration removal, cleanup errors and fresh instances on restart.
+
+Retained core: constructor immediately registers self using an owned effect,
+class initialization precedes ACTIVE publication, inherited dependency declarations,
+availability predicate, owned cleanup and reactive restoration. Python adaptations:
+Service(ctx, config=None, *, name=None), string class name, start/check in place of
+Symbols, native callability/type checks, read-only defining ctx/config and public
+registration handle. Name is ordinary instance data: mutating it does not rename
+the registered binding. A direct constructor does not call start, matching source
+separation of construction from class-plugin initialization.
+
+Deferred: Service filter/extend helpers, interceptor config merge, decorators/init
+hook metadata, callable proxy tracing and caller-context association. Services
+remain unwrapped Python objects with a defining context. Events are Phase 7.

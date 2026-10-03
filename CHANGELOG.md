@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Phase 6: exported Service base class with declared/overridden name, defining
+  context, original config, owned registration, start/check hooks and native
+  callable subclasses; 25 service-class cases, guide, ADR and runnable example.
+
+
 - Phase 5: owned service bindings, get/set/require, reactive inject declarations,
   activation/cleanup snapshots, provider availability notifications, joined
   dependent teardown, 41 service cases, guide, ADR and runnable example.
@@ -28,4 +33,4 @@
 
 - Phase 0: source audit, compatibility plan, uv-managed typed package scaffold,
   development checks, and import smoke test.
-- Service abstraction, events and isolation remain future work; no release published.
+- Events, isolation and tracing remain future work; no release published.

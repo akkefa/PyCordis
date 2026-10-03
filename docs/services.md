@@ -76,7 +76,8 @@ excluded from removal's dependency joins because they already own the cleanup;
 joining them would wait for that same removal. Declared dependency cycles with
 no available seed bindings remain pending; this phase does not solve cycles.
 
-The Service base class is Phase 6. Attribute service lookup, accessors/mixins,
+The Service base class is implemented in Phase 6; see [Service classes](service.md).
+Attribute service lookup, accessors/mixins,
 traceable methods, isolation/intercept configuration and internal events remain
 future work. Root Fiber disposal restarts its lifecycle; it is not terminal
 Context shutdown. Loop-bound service mutations cannot move to another loop.

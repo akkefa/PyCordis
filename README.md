@@ -4,8 +4,8 @@ An incremental, framework-independent Python plugin runtime targeting the Cordis
 behavior used by DeepSeek Harness. Plugins, services, reactive dependencies,
 and reversible effects belong here; agent loops and LLM integrations do not.
 
-**Status: Phase 5 Context, Fiber lifecycle, effects, plugin registry, and reactive
-service dependencies. Service base class, events and isolation remain future work.**
+**Status: Phase 6 Context, Fiber lifecycle, effects, plugin registry, reactive
+service dependencies and the Service base class. Events and isolation remain future work.**
 The internal version is `0.0.0`; `0.1.0` is reserved for a coherent tested API.
 The `pycordis` distribution name is provisional (PyPI JSON endpoint returned
 404 on 2026-10-03; this does not reserve the name). Nothing has been published.
@@ -25,7 +25,8 @@ uv build
 
 Read [architecture](docs/architecture.md), [source audit](docs/phase-0.md),
 and [compatibility](docs/compatibility.md) before adding runtime code.
-The next reviewed increment is the Service abstraction. Read the
+The next reviewed increment is Events. Read the
+[Service class guide](docs/service.md) and [Service ADR](docs/adr/0007-service-abstraction.md). Read the
 [Services guide](docs/services.md) and [Services ADR](docs/adr/0006-reactive-services.md). Read the
 [Plugin guide](docs/plugins.md) and [Registry ADR](docs/adr/0005-plugin-registry.md). Read the
 [Effects guide](docs/effects.md) and [Effects ADR](docs/adr/0004-reversible-effects.md). Read the
@@ -90,3 +91,21 @@ consumer. Missing bindings leave it pending; availability activates it, removal
 unloads it, and restoration activates it again. Read declared bindings with
 `ctx.require("database")`; `ctx.get("database")` is an unrestricted current lookup.
 Run `uv run python examples/reactive_services.py`.
+
+## Service classes
+
+```python
+from pycordis import Service
+
+
+class Database(Service):
+    name = "database"
+
+    def start(self) -> object:
+        return self.ctx.effect(lambda: lambda: print("released database resource"))
+```
+
+Mount with `await ctx.plugin(Database, config)`. The instance registers itself,
+and dependents wait for start to finish. Optional check gates dependencies;
+ordinary `__call__` supports callable services. Run
+`uv run python examples/service_plugin.py`.

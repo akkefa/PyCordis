@@ -60,3 +60,11 @@ callback form conveniently. See services.md for availability and snapshots.
 Config schemas still fail explicitly. Config objects pass by identity without
 validation. Internal events and terminal Context disposal remain future work;
 root Fiber disposal preserves restart semantics.
+
+## Service class plugins (Phase 6)
+
+Service subclasses can use their inherited constructor with ctx/config and a
+declared name. The base registers the instance and supplies start/check hooks;
+existing class mounting waits for start before publishing ACTIVE availability.
+Restart constructs a new instance. See service.md for constructor ownership and
+why direct construction does not invoke start automatically.

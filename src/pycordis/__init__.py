@@ -7,6 +7,7 @@ from .effects import Effect, EffectMeta
 from .errors import CordisError
 from .fiber import Fiber, FiberState
 from .registry import PluginRuntime, Registry
+from .service import Service
 
 __all__ = [
     "Context",
@@ -17,4 +18,5 @@ __all__ = [
     "FiberState",
     "PluginRuntime",
     "Registry",
+    "Service",
 ]
