@@ -2,7 +2,7 @@
 
 import asyncio
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def greeter(ctx: Context, config: object) -> object:

@@ -7,7 +7,7 @@ See the [effect engine](effects.md). The reference remains Harness
 
 ```python
 import asyncio
-from pycordis import Context, Fiber
+from deepseek_cordis import Context, Fiber
 
 
 async def setup(ctx: Context, config: object) -> object:

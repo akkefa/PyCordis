@@ -5,7 +5,7 @@
 returns a normalized snapshot without mounting or invoking setup.
 
 ```python
-from pycordis import PluginMeta, PluginSpec, plugin_meta, inspect_plugin
+from deepseek_cordis import PluginMeta, PluginSpec, plugin_meta, inspect_plugin
 
 
 @plugin_meta(PluginMeta(name="worker", inject={"database": {"timeout": 5}}))

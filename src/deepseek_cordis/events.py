@@ -42,7 +42,7 @@ async def _resolve(value: object) -> object:
         previous = value
         value = await value
         if value is previous:
-            # PyCordis Effect/Fiber intentionally settle to their own handle.
+            # deepseek-cordis Effect/Fiber intentionally settle to their own handle.
             return value
     return value
 
@@ -189,7 +189,9 @@ class Events:
         if not callable(next_):
             raise TypeError("waterfall terminal must be callable")
         callbacks = deque(self._dispatch("waterfall", name, args, filter_))
-        asynchronous: ContextVar[bool] = ContextVar("pycordis_waterfall_async", default=False)
+        asynchronous: ContextVar[bool] = ContextVar(
+            "deepseek_cordis_waterfall_async", default=False
+        )
 
         async def resolve(value: object) -> object:
             token = asynchronous.set(True)

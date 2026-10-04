@@ -4,7 +4,7 @@ An effect registers resource setup and cleanup with the Context's Fiber.
 Registration precedes setup, so a reentrant owner unload cannot miss it.
 
 ```python
-from pycordis import Context
+from deepseek_cordis import Context
 
 ctx = Context()
 resources = []
@@ -99,7 +99,7 @@ Cleanup failure is retained for structural joins. A single cleanup error is
 re-raised unchanged; multiple errors form a BaseExceptionGroup (ExceptionGroup
 when all members are ordinary Exceptions).
 
-**Intentional deviation:** source nested cleanup can fail fast. PyCordis instead
+**Intentional deviation:** source nested cleanup can fail fast. deepseek-cordis instead
 drains all collected callbacks before reporting errors. This prevents remaining
 owned resources from being abandoned after one failure. Ownership/drain-all
 behavior has explicit tests and is not claimed as identical compatibility.

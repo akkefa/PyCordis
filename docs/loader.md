@@ -1,11 +1,11 @@
 # Deterministic plugin loading
 
 The loader is an optional module over the existing kernel. Import it from
-`pycordis.loader`; it does not install a loader service or alter Context.
+`deepseek_cordis.loader`; it does not install a loader service or alter Context.
 
 ```python
-from pycordis import Context
-from pycordis.loader import Loader, PluginEntry
+from deepseek_cordis import Context
+from deepseek_cordis.loader import Loader, PluginEntry
 
 loader = Loader(Context())
 batch = await loader.load(

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 async def worker(ctx: Context, config: object) -> object:

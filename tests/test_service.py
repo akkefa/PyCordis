@@ -7,7 +7,7 @@ from collections.abc import Iterator
 
 import pytest
 
-from pycordis import Context, CordisError, Fiber, FiberState, Service
+from deepseek_cordis import Context, CordisError, Fiber, FiberState, Service
 
 
 def assert_state(fiber: Fiber, state: FiberState) -> None:

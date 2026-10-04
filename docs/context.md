@@ -5,7 +5,7 @@ synchronous and requires no running event loop. It initializes root-local runtim
 stores and an ACTIVE root Fiber without scheduling a Task.
 
 ```python
-from pycordis import Context
+from deepseek_cordis import Context
 
 root = Context()
 worker = root.extend({"label": "worker", "tenant": "demo"})

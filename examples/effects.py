@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncIterator
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 async def main() -> None:

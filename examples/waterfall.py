@@ -3,7 +3,7 @@
 import asyncio
 from collections.abc import Callable
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def add(value: int, next_: Callable[[], object]) -> int:

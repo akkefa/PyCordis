@@ -2,6 +2,20 @@
 
 ## 0.1.0 — Unreleased
 
+- Completed the deepseek-cordis rebrand: Python imports and source package are
+  deepseek_cordis, repository/documentation links target akkefa/deepseek-cordis,
+  and logger/context metadata identifiers use the new namespace.
+
+- Selected deepseek-cordis as the PyPI distribution name after pending publisher
+  registration; the later full rebrand changed imports to deepseek_cordis.
+- Updated archive and installed-distribution checks for the distinct distribution
+  and import names, normalized artifact names, and release/documentation links.
+
+- Added matching-version GitHub tag releases to PyPI through Trusted Publishing,
+  gated by reusable CI and isolated build artifacts; documented one-time setup.
+- Added release-tag guard tests and made clean-wheel version checks read package
+  metadata so future releases do not require a hardcoded checker edit.
+
 - Phase 15: GitHub Actions checks for Python 3.11, 3.12 and 3.13; locked tools,
   warnings-as-errors tests, lint/format/type checks, builds, distribution audits,
   strict metadata validation and isolated wheel installation.

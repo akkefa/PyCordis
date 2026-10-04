@@ -2,8 +2,8 @@
 
 import asyncio
 
-from pycordis import Context, FiberState
-from pycordis.loader import Loader
+from deepseek_cordis import Context, FiberState
+from deepseek_cordis.loader import Loader
 
 
 async def main() -> None:

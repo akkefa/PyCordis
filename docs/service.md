@@ -4,7 +4,7 @@ Service builds on owned service bindings; it does not introduce another lifecycl
 Subclasses declare a name and mount through the existing plugin registry:
 
 ```python
-from pycordis import Context, Service
+from deepseek_cordis import Context, Service
 
 
 class Database(Service):

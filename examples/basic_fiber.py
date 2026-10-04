@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
-from pycordis import Context, Fiber
+from deepseek_cordis import Context, Fiber
 
 
 async def setup(ctx: Context, config: object) -> object:

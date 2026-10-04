@@ -11,7 +11,7 @@ from collections.abc import Awaitable, Callable
 
 import pytest
 
-from pycordis import Context, CordisError, Fiber, FiberState
+from deepseek_cordis import Context, CordisError, Fiber, FiberState
 
 
 def assert_state(fiber: Fiber, expected: FiberState) -> None:

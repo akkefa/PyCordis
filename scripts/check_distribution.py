@@ -8,6 +8,7 @@ import csv
 import hashlib
 import io
 import json
+import re
 import tarfile
 import tomllib
 import zipfile
@@ -52,11 +53,13 @@ def check_distributions(wheel: Path, sdist: Path, root: Path) -> dict[str, objec
         project = tomllib.load(config_file)["project"]
     assert project["dependencies"] == [] and project.get("optional-dependencies", {}) == {}
     name, version = project["name"], project["version"]
-    dist_info = f"{name}-{version}.dist-info"
+    archive_name = re.sub(r"[-_.]+", "_", name).lower()
+    import_name = "deepseek_cordis"
+    dist_info = f"{archive_name}-{version}.dist-info"
     readme = (root / project["readme"]).read_text()
     sources = {
         path.relative_to(root / "src").as_posix(): path.read_bytes()
-        for path in (root / "src" / name).rglob("*")
+        for path in (root / "src" / import_name).rglob("*")
         if path.is_file() and (path.suffix == ".py" or path.name == "py.typed")
     }
     with zipfile.ZipFile(wheel) as archive:
@@ -72,7 +75,7 @@ def check_distributions(wheel: Path, sdist: Path, root: Path) -> dict[str, objec
         assert set(names) == allowed, "wheel has missing or unexpected contents"
         for path, data in sources.items():
             assert archive.read(path) == data, f"wheel source mismatch: {path}"
-        assert f"{name}/py.typed" in names
+        assert f"{import_name}/py.typed" in names
         for file in project["license-files"]:
             assert archive.read(f"{dist_info}/licenses/{file}") == (root / file).read_bytes()
         check_metadata(archive.read(f"{dist_info}/METADATA"), project, readme)
@@ -90,16 +93,16 @@ def check_distributions(wheel: Path, sdist: Path, root: Path) -> dict[str, objec
             data = archive.read(path)
             expected = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip("=")
             assert digest == f"sha256={expected}" and int(size) == len(data), f"bad RECORD: {path}"
-    prefix = f"{name}-{version}"
+    prefix = f"{archive_name}-{version}"
     with tarfile.open(sdist, "r:gz") as archive:
         members = archive.getmembers()
         names = [member.name for member in members]
         assert len(names) == len(set(names)), "duplicate sdist member"
         for member in members:
-            path = PurePosixPath(member.name)
-            assert not path.is_absolute() and ".." not in path.parts
-            assert path.parts[0] == prefix and (member.isfile() or member.isdir())
-            assert not set(path.parts) & {".git", ".venv", "__pycache__", "dist", ".env"}
+            member_path = PurePosixPath(member.name)
+            assert not member_path.is_absolute() and ".." not in member_path.parts
+            assert member_path.parts[0] == prefix and (member.isfile() or member.isdir())
+            assert not set(member_path.parts) & {".git", ".venv", "__pycache__", "dist", ".env"}
         expected_files = {
             path.relative_to(root).as_posix(): path.read_bytes()
             for folder in ["src", "tests", "docs", "examples", "scripts"]

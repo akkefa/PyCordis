@@ -6,7 +6,7 @@ import asyncio
 
 import pytest
 
-from pycordis import Context, CordisError, Effect, Fiber, FiberState
+from deepseek_cordis import Context, CordisError, Effect, Fiber, FiberState
 
 
 def assert_state(fiber: Fiber, state: FiberState) -> None:

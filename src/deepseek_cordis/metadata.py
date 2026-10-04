@@ -11,7 +11,7 @@ from typing import TypeVar, cast
 from .services import _name, normalize_inject
 
 T = TypeVar("T")
-_MARKER = "__pycordis_meta__"
+_MARKER = "__deepseek_cordis_meta__"
 
 
 @dataclass(frozen=True, init=False)

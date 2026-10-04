@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def main() -> None:

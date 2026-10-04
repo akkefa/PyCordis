@@ -281,3 +281,26 @@ changes and matching local verification. Source archives now include that guide.
 Runtime APIs and dependencies are unchanged; publication remains a separate
 request. See [github-readiness.md](github-readiness.md) and
 [ADR 0016](adr/0016-github-readiness.md).
+
+## Tagged PyPI publishing
+
+The requested release workflow validates a tag against package metadata, reuses
+the CI matrix, builds and audits artifacts, then transfers them to a separate
+Trusted Publishing job. OIDC permission is limited to that job. Account setup
+and tag creation remain maintainer actions. See [publishing.md](publishing.md)
+and [ADR 0017](adr/0017-tagged-pypi-publishing.md).
+
+## Distribution identity
+
+The maintainer selected `deepseek-cordis` for PyPI. Its normalized archive name
+is `deepseek_cordis`; its Python import package remains `deepseek_cordis`. Archive and
+installation checks treat those identities separately. The release workflow
+points to the selected PyPI project. See [ADR 0018](adr/0018-distribution-name.md).
+
+## Full project rebrand
+
+The project and repository are named `deepseek-cordis`; the Python package is
+`deepseek_cordis`. This supersedes the earlier retained-import decision. Active
+imports, examples, namespace labels and repository links use the new names.
+Historical audit records retain their original identifiers. See
+[ADR 0019](adr/0019-full-project-rebrand.md) and [publishing.md](publishing.md).

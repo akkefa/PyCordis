@@ -11,7 +11,7 @@ from collections.abc import AsyncIterator, Awaitable, Generator
 
 import pytest
 
-from pycordis import Context, CordisError, Effect, EffectMeta, Fiber, FiberState
+from deepseek_cordis import Context, CordisError, Effect, EffectMeta, Fiber, FiberState
 
 
 async def join(value: Awaitable[None] | None) -> None:

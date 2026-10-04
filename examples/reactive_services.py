@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
-from pycordis import Context, FiberState
+from deepseek_cordis import Context, FiberState
 
 
 def consumer(ctx: Context, config: object) -> object:

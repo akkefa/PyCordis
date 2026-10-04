@@ -11,7 +11,7 @@ not silently substituted contracts.
 
 ## Current behavior matrix
 
-| Cordis feature | PyCordis | Evidence / boundary |
+| Cordis feature | deepseek-cordis | Evidence / boundary |
 |---|---|---|
 | Context | Python adaptation | Root/parent/owner, immutable metadata views and subclass identity; no attribute/service proxies |
 | Fiber lifecycle | Implemented scoped core | Serialized setup/unload/restart, owned child drain, retained failures and shielded waits; publication hooks future |

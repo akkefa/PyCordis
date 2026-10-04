@@ -2,7 +2,7 @@
 
 import asyncio
 
-from pycordis import Context, FiberState
+from deepseek_cordis import Context, FiberState
 
 
 def worker(ctx: Context, config: object) -> None:

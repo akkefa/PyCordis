@@ -9,7 +9,7 @@ from typing import cast
 
 import pytest
 
-from pycordis import Context, CordisError, FiberState, ScopeLabel, Service, current_context
+from deepseek_cordis import Context, CordisError, FiberState, ScopeLabel, Service, current_context
 
 
 class Database(Service):

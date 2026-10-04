@@ -1,9 +1,11 @@
-# PyCordis
+# deepseek-cordis
 
 A lightweight Python plugin runtime for services, reactive dependencies, owned
 effects and events. Python 3.11+; no runtime dependencies.
 
-Version 0.1.0 is an alpha API. PyCordis adapts the ownership model of the vendored
+PyPI distribution: `deepseek-cordis`. Python import: `deepseek_cordis`.
+
+Version 0.1.0 is an alpha API. deepseek-cordis adapts the ownership model of the vendored
 Cordis 4.0.4 runtime used by DeepSeek Harness at commit
 `639ed015397290b3745d163aafe02ffee4aa3f84`. It is an independent implementation,
 not the Harness application or an affiliated Cordis/DeepSeek product.
@@ -12,7 +14,7 @@ not the Harness application or an affiliated Cordis/DeepSeek product.
 
 ```python
 import asyncio
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def greeter(ctx: Context, config: object) -> object:
@@ -50,16 +52,16 @@ Cordis or live DeepSeek Harness compatibility. There are no schema adapter extra
 
 ## Documentation
 
-- [Source and full walkthrough](https://github.com/akkefa/PyCordis)
-- [Runtime mental model](https://github.com/akkefa/PyCordis/blob/main/docs/mental-model.md)
-- [Runnable examples](https://github.com/akkefa/PyCordis/blob/main/examples/README.md)
-- [Compatibility matrix](https://github.com/akkefa/PyCordis/blob/main/docs/compatibility.md)
-- [Packaging and local installation](https://github.com/akkefa/PyCordis/blob/main/docs/packaging.md)
-- [Issues](https://github.com/akkefa/PyCordis/issues)
-- [Changelog](https://github.com/akkefa/PyCordis/blob/main/CHANGELOG.md)
+- [Source and full walkthrough](https://github.com/akkefa/deepseek-cordis)
+- [Runtime mental model](https://github.com/akkefa/deepseek-cordis/blob/main/docs/mental-model.md)
+- [Runnable examples](https://github.com/akkefa/deepseek-cordis/blob/main/examples/README.md)
+- [Compatibility matrix](https://github.com/akkefa/deepseek-cordis/blob/main/docs/compatibility.md)
+- [Packaging and local installation](https://github.com/akkefa/deepseek-cordis/blob/main/docs/packaging.md)
+- [Issues](https://github.com/akkefa/deepseek-cordis/issues)
+- [Changelog](https://github.com/akkefa/deepseek-cordis/blob/main/CHANGELOG.md)
 
 MIT licensed, copyright 2026 Ikram Ali. Cordis (Shigma) and DeepSeek Harness
 (DeepSeek) are MIT-licensed behavioral references. The distribution includes the
 project license and retained third-party notices; the full
-[attribution](https://github.com/akkefa/PyCordis/blob/main/THIRD_PARTY_NOTICES.md)
+[attribution](https://github.com/akkefa/deepseek-cordis/blob/main/THIRD_PARTY_NOTICES.md)
 is also available in the source repository.

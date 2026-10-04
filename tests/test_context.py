@@ -13,7 +13,7 @@ from collections.abc import Mapping
 
 import pytest
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def test_root_has_no_parent_and_owns_itself() -> None:

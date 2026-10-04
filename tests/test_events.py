@@ -8,7 +8,7 @@ from typing import cast
 
 import pytest
 
-from pycordis import Context, CordisError, Effect, Service, is_bailed
+from deepseek_cordis import Context, CordisError, Effect, Service, is_bailed
 
 
 async def resolved(value: object) -> object:

@@ -1,6 +1,6 @@
-# Contributing to PyCordis
+# Contributing to deepseek-cordis
 
-PyCordis is an independent Python implementation of the Cordis runtime model
+deepseek-cordis is an independent Python implementation of the Cordis runtime model
 used by DeepSeek Harness. Its `0.1.0` API is alpha and compatibility is partial.
 Start with [the mental model](docs/mental-model.md),
 [the compatibility matrix](docs/compatibility.md), and
@@ -50,9 +50,9 @@ uv run --locked --group packaging ruff format --check .
 uv run --locked --group packaging mypy --python-version 3.11 src tests examples scripts
 uv build
 uv run --locked --group packaging python scripts/check_distribution.py \
-  dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
+  dist/deepseek_cordis-0.1.0-py3-none-any.whl dist/deepseek_cordis-0.1.0.tar.gz
 uv run --locked --group packaging twine check --strict \
-  dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
+  dist/deepseek_cordis-0.1.0-py3-none-any.whl dist/deepseek_cordis-0.1.0.tar.gz
 ```
 
 For a full local version matrix, set `export UV_PYTHON=3.12`, run

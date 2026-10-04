@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 Cleanup: TypeAlias = Callable[[], object]
 Setup: TypeAlias = Callable[["Context", object], object]
 Epoch: TypeAlias = tuple[int, ...] | None
-_executing: ContextVar[tuple[Fiber, ...]] = ContextVar("pycordis_lifecycle", default=())
+_executing: ContextVar[tuple[Fiber, ...]] = ContextVar("deepseek_cordis_lifecycle", default=())
 
 
 class FiberState(IntEnum):
@@ -274,7 +274,7 @@ class Fiber:
                         except (Exception, asyncio.CancelledError) as error:
                             self._error = error
                             self._epoch = None
-                            logging.getLogger("pycordis").error(
+                            logging.getLogger("deepseek_cordis").error(
                                 "Fiber %s setup failed", self.name, exc_info=error
                             )
                     if (
@@ -313,7 +313,7 @@ class Fiber:
         for result in results:
             if isinstance(result, BaseException):
                 self._cleanup_errors.append(result)
-                logging.getLogger("pycordis").error(
+                logging.getLogger("deepseek_cordis").error(
                     "Fiber %s cleanup failed", self.name, exc_info=result
                 )
 

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import pycordis
+import deepseek_cordis
 
 
 def test_package_import() -> None:
-    assert pycordis.__name__ == "pycordis"
+    assert deepseek_cordis.__name__ == "deepseek_cordis"

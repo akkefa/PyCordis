@@ -14,7 +14,7 @@ A validator instance or class with a static/class method works; a plain validato
 function needs a small object adapter. No schema library is required.
 
 ```python
-from pycordis import PluginMeta, ValidationError, ValidationIssue, plugin_meta
+from deepseek_cordis import PluginMeta, ValidationError, ValidationIssue, plugin_meta
 
 
 class PortConfig:

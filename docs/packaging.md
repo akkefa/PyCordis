@@ -1,6 +1,7 @@
-# Packaging PyCordis
+# Packaging deepseek-cordis
 
-Phase 14 prepares `0.1.0` as an alpha package. The Context/Fiber, plugin,
+Phase 14 prepares `0.1.0` as an alpha package. Subsequent publisher setup
+selects `deepseek-cordis` as its PyPI distribution name, with `deepseek_cordis` imports. The Context/Fiber, plugin,
 service, event, config and loader APIs form a tested, coherent starting point.
 Cordis/Harness compatibility remains partial; see [compatibility.md](compatibility.md).
 The artifacts are prepared locally and have not been published.
@@ -37,9 +38,9 @@ uv run --locked --group packaging ruff format --check .
 uv run --locked --group packaging mypy src tests examples scripts
 uv build
 uv run --locked --group packaging python scripts/check_distribution.py \
-  dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
+  dist/deepseek_cordis-0.1.0-py3-none-any.whl dist/deepseek_cordis-0.1.0.tar.gz
 uv run --locked --group packaging twine check --strict \
-  dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
+  dist/deepseek_cordis-0.1.0-py3-none-any.whl dist/deepseek_cordis-0.1.0.tar.gz
 ```
 
 The standard-library distribution checker compares archive contents with the
@@ -54,17 +55,17 @@ Use a new environment without development tools or dependencies. Substitute
 absolute paths for the wheel, environment, and checker below:
 
 ```sh
-uv venv --no-project --python 3.11 /tmp/pycordis-wheel-311
-uv pip install --no-deps --python /tmp/pycordis-wheel-311/bin/python \
-  /absolute/path/to/PyCordis/dist/pycordis-0.1.0-py3-none-any.whl
+uv venv --no-project --python 3.11 /tmp/deepseek_cordis-wheel-311
+uv pip install --no-deps --python /tmp/deepseek_cordis-wheel-311/bin/python \
+  /absolute/path/to/deepseek-cordis/dist/deepseek_cordis-0.1.0-py3-none-any.whl
 cd /tmp
-/tmp/pycordis-wheel-311/bin/python -I \
-  /absolute/path/to/PyCordis/scripts/check_installation.py
+/tmp/deepseek_cordis-wheel-311/bin/python -I \
+  /absolute/path/to/deepseek-cordis/scripts/check_installation.py
 ```
 
 Repeat with Python 3.12 and 3.13 and distinct environment paths. `-I` excludes
 checkout and user import paths. The checker requires the installed module to
-live inside the environment, version `0.1.0`, only the PyCordis distribution,
+live inside the environment, the checkout's package version, only the deepseek-cordis distribution,
 a non-editable wheel install, no runtime dependencies, public exports and the
 typing marker. It exercises validation, consumer-before-provider loading,
 service injection, event delivery and cleanup through installed public APIs.
@@ -76,9 +77,16 @@ checks are smoke checks; Phase 15 adds a full multi-version CI matrix.
 ## Publication boundary
 
 No upload, tag, commit or release is created by these checks. A read-only PyPI
-JSON lookup on 2026-10-03 returned HTTP 404 for `pycordis`; that does not reserve
-the name or establish publishing permissions. Publication requires a separate
+JSON lookup on 2026-10-03 returned HTTP 404 for the former `pycordis` name; that does not reserve
+the name or establish publishing permissions. PyPI later rejected that name as
+too similar to an existing project. The provided pending-publisher confirmation
+selects `deepseek-cordis`; this remains an independent implementation.
+Publication requires a separate
 explicit request and fresh verification of package ownership and release state.
 
 References: [PyPA metadata guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)
 and [uv package guide](https://docs.astral.sh/uv/guides/package/).
+
+For production publishing from matching GitHub tags, follow
+[publishing.md](publishing.md). Account setup and an authorized tag push are
+separate from local package preparation.

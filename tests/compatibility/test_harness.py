@@ -7,7 +7,7 @@ from collections.abc import Generator
 
 import pytest
 
-from pycordis import Context, FiberState
+from deepseek_cordis import Context, FiberState
 
 pytestmark = [pytest.mark.asyncio, pytest.mark.compatibility]
 

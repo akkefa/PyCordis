@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from pycordis import Context, CordisError, Fiber, FiberState
+from deepseek_cordis import Context, CordisError, Fiber, FiberState
 
 
 def test_registry_is_root_local_and_shared_by_extensions() -> None:
@@ -385,7 +385,7 @@ async def test_failed_constructor_mount_rolls_back_new_record(
     def broken(*args: object, **kwargs: object) -> Fiber:
         raise RuntimeError("construction failed")
 
-    monkeypatch.setattr("pycordis.registry.Fiber", broken)
+    monkeypatch.setattr("deepseek_cordis.registry.Fiber", broken)
     root = Context()
     with pytest.raises(RuntimeError, match="construction failed"):
         root.plugin(lambda inner, config: None)

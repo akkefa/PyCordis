@@ -44,8 +44,8 @@ groups, then runs:
 The build starts in a fresh checkout and produces one artifact pair, so CI can
 use version-independent globs. Local work may retain old builds; use the exact
 versioned paths in [packaging.md](packaging.md) and [CONTRIBUTING.md](../CONTRIBUTING.md).
-The installed-wheel checker still intentionally validates the current release
-version; update that assertion when preparing a new version.
+The installed-wheel checker reads the expected release version from the checkout
+metadata and checks the independently installed wheel against it.
 
 Actions are pinned to verified commit hashes, uv is pinned to the locally tested
 0.12.2, and dependency synchronization uses `--locked`. The workflow uses
@@ -70,3 +70,10 @@ be selected as a named feature, compatibility gap or release task.
 
 Workflow references: [uv's GitHub Actions integration](https://docs.astral.sh/uv/guides/integration/github/)
 and [GitHub job matrices](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations).
+
+## Tag-triggered publication
+
+Subsequent release automation adds `release.yml` and makes CI callable by that
+workflow. Matching version tags run the full matrix before a separate checked
+build is handed to the PyPI publisher. See [publishing.md](publishing.md) for the
+required account/environment settings. No release was published during setup.

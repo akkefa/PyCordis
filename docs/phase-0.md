@@ -1,3 +1,6 @@
+> Historical phase evidence: PyCordis/pycordis were the names used at the time.
+> The current project is deepseek-cordis with deepseek_cordis imports.
+
 # Phase 0 source audit — 2026-10-03
 
 ## Existing repository

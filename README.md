@@ -1,6 +1,6 @@
-# PyCordis
+# deepseek-cordis
 
-PyCordis is a lightweight Python plugin runtime: plugins publish services, wait
+deepseek-cordis is a lightweight Python plugin runtime: plugins publish services, wait
 for dependencies, register listeners and effects, and release their resources when
 their owner unloads. It is independent of any web framework or agent loop and has
 no runtime dependencies.
@@ -8,13 +8,15 @@ no runtime dependencies.
 It exists to bring the ownership and reactive dependency model of Cordis to Python.
 Cordis is the TypeScript reference; the primary target is the vendored Cordis 4.0.4
 runtime used by DeepSeek Harness at commit
-`639ed015397290b3745d163aafe02ffee4aa3f84`. PyCordis implements that runtime model,
+`639ed015397290b3745d163aafe02ffee4aa3f84`. deepseek-cordis implements that runtime model,
 not the Harness application or its LLM integrations. Python APIs adapt the source
 where object proxies, Symbols or JavaScript execution semantics do not transfer.
 
 **Status: version `0.1.0` prepared as an alpha API; compatibility remains partial.**
-The distribution name is provisional and no release has been published in this
-project work. Phase 15 adds contribution guidance and a Python 3.11–3.13 CI
+The PyPI distribution name is `deepseek-cordis`; Python imports use
+`deepseek_cordis`. This is an independent project, not an official DeepSeek package.
+No release has been published in this project work. Phase 15 adds contribution
+guidance and a Python 3.11–3.13 CI
 workflow. Publication requires a separate explicit user request. See the
 [current compatibility matrix](docs/compatibility.md) and
 [GitHub readiness checklist](docs/github-readiness.md).
@@ -30,7 +32,7 @@ uv run python examples/first_plugin.py
 
 This installs the local project and its development tools into the project's
 virtual environment. To use the source in another Python environment, install
-this checkout with `python -m pip install /path/to/PyCordis`. There is no published
+this checkout with `python -m pip install /path/to/deepseek-cordis`. There is no published
 PyPI install command for this project yet.
 
 ## Start with ownership
@@ -55,7 +57,7 @@ return a callback for other cleanup. Run this complete example as
 ```python
 import asyncio
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def greeter(ctx: Context, config: object) -> object:
@@ -89,7 +91,7 @@ constructor, then start; any returned cleanup belongs to the mount. Run
 ```python
 import asyncio
 
-from pycordis import Context, Service
+from deepseek_cordis import Context, Service
 
 
 class Database(Service):
@@ -130,7 +132,7 @@ those bindings are available. Run `uv run python examples/dependency_injection.p
 ```python
 import asyncio
 
-from pycordis import Context, FiberState
+from deepseek_cordis import Context, FiberState
 
 
 def worker(ctx: Context, config: object) -> None:
@@ -168,7 +170,7 @@ from __future__ import annotations
 
 import asyncio
 
-from pycordis import Context, FiberState
+from deepseek_cordis import Context, FiberState
 
 
 def consumer(ctx: Context, config: object) -> object:
@@ -214,7 +216,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncIterator
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 async def main() -> None:
@@ -243,7 +245,7 @@ if __name__ == "__main__":
 ```
 
 Within one effect, cleanup runs in reverse order. Top-level cleanup starts in
-reverse registration order and may complete concurrently. PyCordis drains remaining
+reverse registration order and may complete concurrently. deepseek-cordis drains remaining
 nested cleanup after errors, an intentional difference from the source. Resources
 created through a Context belong to its Fiber, including through ordinary views.
 User-created background Tasks need explicit cleanup; they are not automatically owned.
@@ -258,7 +260,7 @@ zero and empty values can stop serial/bail dispatch. Run
 ```python
 import asyncio
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def listeners(ctx: Context, config: object) -> None:
@@ -302,7 +304,7 @@ Run `uv run python examples/waterfall.py`:
 import asyncio
 from collections.abc import Callable
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def add(value: int, next_: Callable[[], object]) -> int:
@@ -397,6 +399,7 @@ Start with [the mental model](docs/mental-model.md) and
 [events](docs/events.md), [scope](docs/scope.md), [metadata](docs/metadata.md),
 [validation](docs/config.md) and [loader](docs/loader.md).
 For package installation and artifact checks, read [packaging](docs/packaging.md).
+For tag-triggered PyPI releases and one-time account setup, read [publishing](docs/publishing.md).
 For development setup, checks and pull requests, read [CONTRIBUTING](CONTRIBUTING.md).
 For design work, read [architecture](docs/architecture.md),
 [the source audit](docs/phase-0.md) and [decisions](docs/adr/0001-phase-0-foundation.md).
@@ -408,7 +411,7 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy src tests examples scripts
 uv build
-uv run python scripts/check_distribution.py dist/pycordis-0.1.0-py3-none-any.whl dist/pycordis-0.1.0.tar.gz
+uv run python scripts/check_distribution.py dist/deepseek_cordis-0.1.0-py3-none-any.whl dist/deepseek_cordis-0.1.0.tar.gz
 ```
 
 All 16 standalone examples in [examples/README.md](examples/README.md) run from the
@@ -418,7 +421,7 @@ loader_plugins.py supplies imports for the loader example and is not an entry po
 
 ## License and attribution
 
-PyCordis is an independent MIT-licensed Python implementation, copyright 2026
+deepseek-cordis is an independent MIT-licensed Python implementation, copyright 2026
 Ikram Ali. It is not affiliated with Cordis or DeepSeek. Cordis by Shigma and
 DeepSeek Harness by DeepSeek are MIT-licensed behavioral references; retained
 notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), alongside

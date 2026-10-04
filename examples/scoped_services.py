@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
-from pycordis import Context, Service
+from deepseek_cordis import Context, Service
 
 
 class Database(Service):

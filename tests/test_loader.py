@@ -12,7 +12,7 @@ from typing import cast
 
 import pytest
 
-from pycordis import (
+from deepseek_cordis import (
     Context,
     FiberState,
     PluginMeta,
@@ -21,7 +21,7 @@ from pycordis import (
     ValidationError,
     ValidationIssue,
 )
-from pycordis.loader import Loader, PluginEntry, resolve_plugin
+from deepseek_cordis.loader import Loader, PluginEntry, resolve_plugin
 
 
 def test_entry_copies_structure_but_preserves_config_identity() -> None:

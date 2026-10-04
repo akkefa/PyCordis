@@ -10,7 +10,7 @@ from typing import cast
 
 import pytest
 
-from pycordis import Context, CordisError, Effect, FiberState, Service
+from deepseek_cordis import Context, CordisError, Effect, FiberState, Service
 
 pytestmark = [pytest.mark.asyncio, pytest.mark.compatibility]
 

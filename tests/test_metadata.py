@@ -7,7 +7,7 @@ from typing import cast
 
 import pytest
 
-from pycordis import (
+from deepseek_cordis import (
     Context,
     Fiber,
     FiberState,

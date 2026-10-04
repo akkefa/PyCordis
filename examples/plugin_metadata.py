@@ -2,7 +2,7 @@
 
 import asyncio
 
-from pycordis import Context, PluginMeta, PluginSpec, Service, inspect_plugin, plugin_meta
+from deepseek_cordis import Context, PluginMeta, PluginSpec, Service, inspect_plugin, plugin_meta
 
 
 @plugin_meta(PluginMeta(name="database provider", provide="database"))

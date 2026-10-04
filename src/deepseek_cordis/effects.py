@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from .context import Context
     from .fiber import Cleanup, Fiber
 
-_active_effects: ContextVar[tuple[Effect, ...]] = ContextVar("pycordis_effects", default=())
+_active_effects: ContextVar[tuple[Effect, ...]] = ContextVar("deepseek_cordis_effects", default=())
 
 
 @dataclass(frozen=True)
@@ -193,7 +193,7 @@ class Effect:
         if not task.cancelled():
             error = task.exception()
             if error is not None:
-                logging.getLogger("pycordis").error(
+                logging.getLogger("deepseek_cordis").error(
                     "Effect %s async work failed", self.label, exc_info=error
                 )
 
@@ -209,7 +209,9 @@ class Effect:
 
     def _record_cleanup_error(self, error: BaseException) -> None:
         self._cleanup_error = error
-        logging.getLogger("pycordis").error("Effect %s cleanup failed", self.label, exc_info=error)
+        logging.getLogger("deepseek_cordis").error(
+            "Effect %s cleanup failed", self.label, exc_info=error
+        )
 
     @staticmethod
     def _combine(errors: list[BaseException]) -> BaseException:

@@ -1,3 +1,6 @@
+> Historical phase evidence: PyCordis/pycordis were the names used at the time.
+> The current project is deepseek-cordis with deepseek_cordis imports.
+
 # Historical phase evidence
 
 This preserves the Phase 1–11 implementation notes. Statements such as "future"

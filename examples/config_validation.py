@@ -3,7 +3,14 @@
 import asyncio
 from collections.abc import Mapping
 
-from pycordis import Context, PluginMeta, Service, ValidationError, ValidationIssue, plugin_meta
+from deepseek_cordis import (
+    Context,
+    PluginMeta,
+    Service,
+    ValidationError,
+    ValidationIssue,
+    plugin_meta,
+)
 
 
 class ServerConfig:

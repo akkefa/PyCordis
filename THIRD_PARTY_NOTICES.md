@@ -1,6 +1,6 @@
 # Third-party notices
 
-PyCordis contains original Python runtime code, behavioral test adaptations and
+deepseek-cordis contains original Python runtime code, behavioral test adaptations and
 source-analysis documentation. No TypeScript runtime source has been copied into
 the Python package. The full MIT notices below are retained for the behavioral
 reference works. Source commits and test provenance are recorded in

@@ -6,7 +6,7 @@ import asyncio
 import inspect
 from collections.abc import Awaitable, Callable
 
-from pycordis import Context
+from deepseek_cordis import Context
 
 
 def plugin(ctx: Context, config: object) -> None:

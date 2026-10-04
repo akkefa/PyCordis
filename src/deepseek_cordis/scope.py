@@ -17,7 +17,7 @@ class ScopeLabel:
     __slots__ = ()
 
 
-_current_context: ContextVar[Context | None] = ContextVar("pycordis_context", default=None)
+_current_context: ContextVar[Context | None] = ContextVar("deepseek_cordis_context", default=None)
 
 
 def current_context() -> Context | None:

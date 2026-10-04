@@ -1,5 +1,5 @@
 [project]
-name = "pycordis"
+name = "deepseek-cordis"
 version = "0.1.0"
 description = "Python plugin runtime targeting DeepSeek Harness vendored Cordis semantics"
 readme = "README.pypi.md"
@@ -22,11 +22,11 @@ classifiers = [
 # No optional adapters are implemented; development tools are dependency groups.
 
 [project.urls]
-Homepage = "https://github.com/akkefa/PyCordis"
-Repository = "https://github.com/akkefa/PyCordis"
-Issues = "https://github.com/akkefa/PyCordis/issues"
-Documentation = "https://github.com/akkefa/PyCordis/tree/main/docs"
-Changelog = "https://github.com/akkefa/PyCordis/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/akkefa/deepseek-cordis"
+Repository = "https://github.com/akkefa/deepseek-cordis"
+Issues = "https://github.com/akkefa/deepseek-cordis/issues"
+Documentation = "https://github.com/akkefa/deepseek-cordis/tree/main/docs"
+Changelog = "https://github.com/akkefa/deepseek-cordis/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling>=1.27,<2"]
@@ -35,7 +35,7 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 # Twine 6.2 validates through core metadata 2.4; retain PEP 639 license fields.
 core-metadata-version = "2.4"
-packages = ["src/pycordis"]
+packages = ["src/deepseek_cordis"]
 
 [tool.hatch.build.targets.sdist]
 core-metadata-version = "2.4"

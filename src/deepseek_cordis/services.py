@@ -165,7 +165,7 @@ class ServiceRegistry:
                     if not result:
                         continue
             except Exception:
-                logging.getLogger("pycordis").exception(
+                logging.getLogger("deepseek_cordis").exception(
                     "Service %s availability check failed", name
                 )
                 continue

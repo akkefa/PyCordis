@@ -1,6 +1,13 @@
 """Plugins imported explicitly by the loader example."""
 
-from pycordis import Context, PluginMeta, Service, ValidationError, ValidationIssue, plugin_meta
+from deepseek_cordis import (
+    Context,
+    PluginMeta,
+    Service,
+    ValidationError,
+    ValidationIssue,
+    plugin_meta,
+)
 
 
 class DatabaseConfig:
