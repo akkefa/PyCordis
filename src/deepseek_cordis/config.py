@@ -8,7 +8,7 @@ from typing import Protocol, cast
 
 
 class ConfigValidator(Protocol):
-    """Return normalized config or raise; awaitable results are unsupported."""
+    """Return normalized config or raise; awaitable results are unsupported. """
 
     def validate(self, value: object) -> object: ...
 
